@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Garrett Bjerkhoel']
   spec.email         = ['garrett@cased.com']
 
-  spec.summary       = 'Cased provides user and employee activity audit trails.'
-  spec.description   = 'Cased provides user and employee activity audit trails to companies that need to monitor access to information or demonstrate regulatory compliance.'
+  spec.summary       = 'Ruby library for Cased'
+  spec.description   = 'Ruby library for Cased'
   spec.homepage      = 'https://github.com/cased/cased-ruby'
   spec.license       = 'MIT'
 
