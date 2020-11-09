@@ -116,6 +116,7 @@ module Cased
       @api_url = ENV.fetch('CASED_API_URL', 'https://api.cased.com')
       @publish_url = ENV.fetch('CASED_PUBLISH_URL', 'https://publish.cased.com')
       @publish_key = ENV['CASED_PUBLISH_KEY']
+      @silence = !ENV['CASED_SILENCE'].nil?
       @policy_keys = Hash.new do |hash, key|
         normalized_key = key.to_sym
         if normalized_key == :default
