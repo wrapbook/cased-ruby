@@ -8,15 +8,15 @@ A Cased client for Ruby applications in your organization to control and monitor
 - [Configuration](#configuration)
 - [Usage](#usage)
   - [Publishing events to Cased](#publishing-events-to-cased)
-  - [Retrieving events from a Cased Policy](#retrieving-events-from-a-cased-policy)
-  - [Retrieving events from a Cased Policy containing variables](#retrieving-events-from-a-cased-policy-containing-variables)
-  - [Retrieving events from multiple Cased Policies](#retrieving-events-from-multiple-cased-policies)
+  - [Retrieving events from a Cased audit trail](#retrieving-events-from-a-cased-audit-trail)
+  - [Retrieving events from multiple Cased audit trails](#retrieving-events-from-multiple-cased-audit-trails)
   - [Exporting events](#exporting-events)
-  - [Masking & filtering sensitive information](#masking-and-filtering-sensitive-information)
+  - [Masking & filtering sensitive information](#masking--filtering-sensitive-information)
   - [Disable publishing events](#disable-publishing-events)
   - [Context](#context)
   - [Testing](#testing)
 - [Customizing cased-ruby](#customizing-cased-ruby)
+- [Contributing](#contributing)
 
 ## Installation
 
@@ -100,7 +100,7 @@ Cased.publish(
 
 **Cased::Model**
 
-cased-ruby provides a class mixin that gives you a framework to publish events.
+`cased-ruby` provides a class mixin that gives you a framework to publish events.
 
 ```ruby
 require 'cased-ruby'
@@ -170,9 +170,9 @@ Both examples above are equivelent in that they publish the following `credit_ca
 }
 ```
 
-### Retrieving events from a Cased Policy
+### Retrieving events from a Cased audit trail
 
-If you plan on retrieving events from your audit trails you must use an Cased Policy token.
+If you plan on retrieving audit events from your Cased audit trail you must use a Cased API key.
 
 ```ruby
 require 'cased-ruby'
@@ -193,31 +193,9 @@ query.success? # => true
 query.error? # => false
 ```
 
-### Retrieving events from a Cased Policy containing variables
+### Retrieving events from multiple Cased audit trails
 
-Cased policies allow you to filter events by providing variables to your Cased Policy events query. One example of a Cased Policy is to have a single Cased Policy that you can use to query events for any user in your database without having to create a Cased Policy for each user.
-
-```ruby
-require 'cased-ruby'
-
-Cased.configure do |config|
-  config.policy_key = 'policy_live_1dQpY5JliYgHSkEntAbMVzuOROh'
-end
-
-variables = {
-  user_id: 'user_1dSHQSNtAH90KA8zGTooMnmMdiD',
-}
-query = Cased.policy(variables: variables).events.limit(25).page(1)
-results = query.results
-results.each do |event|
-  puts event['action'] # => credit_card.charge
-  puts event['timestamp'] # => 2020-06-23T02:02:39.932759Z
-end
-```
-
-### Retrieving events from multiple Cased Policies
-
-To retrieve events from one or more Cased Policies you can configure multiple Cased Policy API keys and retrieve events for each one.
+To retrieve audit events from one or more Cased audit trails you can configure multiple Cased Policy API keys and retrieve events for each one.
 
 ```ruby
 require 'cased-ruby'
@@ -229,14 +207,14 @@ Cased.configure do |config|
   }
 end
 
-query = Cased.policy[:users].events.limit(25).page(1)
+query = Cased.policies[:users].events.limit(25).page(1)
 results = query.results
 results.each do |event|
   puts event['action'] # => user.login
   puts event['timestamp'] # => 2020-06-23T02:02:39.932759Z
 end
 
-query = Cased.policy[:organizations].events.limit(25).page(1)
+query = Cased.policies[:organizations].events.limit(25).page(1)
 results = query.results
 results.each do |event|
   puts event['action'] # => organization.create
@@ -246,7 +224,7 @@ end
 
 ### Exporting events
 
-Exporting events from a Cased Policy allows you to provide users with exports of their own data or to respond to data requests.
+Exporting events from Cased allows you to provide users with exports of their own data or to respond to data requests.
 
 ```ruby
 require 'cased-ruby'
@@ -281,14 +259,9 @@ Cased.publish(
 
 ### Console Usage
 
-Most Cased events will be created by users from actions on the website from
-custom defined events or lifecycle callbacks. The exception is any console
-session where models may generate Cased events as you start to modify records.
+Most Cased events will be created by users from actions on the website from custom defined events or lifecycle callbacks. The exception is any console session where models may generate Cased events as you start to modify records.
 
-By default any console session will include the hostname of where the console
-session takes place. Since every event must have an actor, you must set the
-actor at the beginning of your console session. If you don't know the user,
-it's recommended you create a system/robot user.
+By default any console session will include the hostname of where the console session takes place. Since every event must have an actor, you must set the actor at the beginning of your console session. If you don't know the user, it's recommended you create a system/robot user.
 
 ```ruby
 # OTHER CONSOLE INITIALIZATION HERE
