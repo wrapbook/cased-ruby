@@ -17,5 +17,9 @@ module Cased
     def publish
       @publish ||= self.class.create(url: Cased.config.publish_url, api_key: Cased.config.publish_key)
     end
+
+    def guard
+      @guard ||= self.class.create(api_key: Cased.config.guard_application_key)
+    end
   end
 end
