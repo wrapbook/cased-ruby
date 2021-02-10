@@ -1,15 +1,18 @@
 # frozen_string_literal: true
 
 require 'cased/error'
+require 'json'
 
 module Cased
   module HTTP
     class Error < Cased::Error
       attr_reader :code
+      attr_reader :json
 
-      def initialize(message = '', code = nil)
-        super(message)
+      def initialize(json = {}, code = nil)
+        @json = json
         @code = code
+        super(JSON.dump(@json))
       end
 
       def self.from_response(response)
