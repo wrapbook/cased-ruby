@@ -10,6 +10,7 @@ module Cased
       attr_writer :token
 
       def initialize
+        @token = Cased.config.guard_user_token
         @directory = Pathname.new(File.expand_path('~/.cguard'))
         @credentials_path = @directory.join('credentials')
       end

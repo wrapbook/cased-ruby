@@ -2,10 +2,24 @@
 
 require 'cased/guard/authentication'
 require 'cased/guard/identity'
+require 'cased/model'
 
 module Cased
   module Guard
     class Session
+      include Cased::Model
+
+      def self.find(guard_session_id)
+        authentication = Cased::Guard::Authentication.new
+
+        response = Cased.clients.guard.get("guard/sessions/#{guard_session_id}", user_token: authentication.token)
+        return unless response.success?
+
+        new.tap do |session|
+          session.session = response.body
+        end
+      end
+
       # @return [Cased::Guard::Authentication]
       attr_reader :authentication
 
@@ -32,6 +46,12 @@ module Cased
       #   session.api_url #=> "approved"
       # @return [String, nil]
       attr_reader :state
+
+      # Public: Command that invoked Guard session.
+      # @example
+      #   session.command #=> "/usr/local/bin/rails console"
+      # @return [String]
+      attr_accessor :command
 
       # Public: Additional user supplied metadata about the Guard session.
       # @example
@@ -77,16 +97,27 @@ module Cased
 
       def initialize(reason: nil, metadata: {})
         @authentication = Cased::Guard::Authentication.new
-        @id = nil
         @reason = reason
         @metadata = metadata
+        @responder = {}
+        @guard_application = {}
+      end
+
+      def to_s
+        command
+      end
+
+      def to_param
+        id
       end
 
       def session=(session)
+        @error = nil
         @id = session.fetch('id')
         @api_url = session.fetch('api_url')
         @url = session.fetch('url')
         @state = session.fetch('state')
+        @command = session.fetch('command')
         @metadata = session.fetch('metadata')
         @reason = session.fetch('reason')
         @ip_address = session.fetch('ip_address')
@@ -96,9 +127,39 @@ module Cased
         @guard_application = session.fetch('guard_application')
       end
 
+      def requested?
+        state == 'requested'
+      end
+
+      def approved?
+        state == 'approved'
+      end
+
+      def denied?
+        state == 'denied'
+      end
+
+      def canceled?
+        state == 'canceled'
+      end
+
+      def timed_out?
+        state == 'timed_out'
+      end
+
       def refresh
+        return false unless api_url
+
         response = Cased.clients.guard.get(api_url, user_token: authentication.token)
         self.session = response.body if response.success?
+      end
+
+      def error?
+        !error.nil?
+      end
+
+      def reason_required?
+        error == :reason_required || guard_application.dig('settings', 'reason_required')
       end
 
       def create
@@ -108,7 +169,40 @@ module Cased
         self.session = response.body if response.success?
 
         response.success?
+      rescue Cased::HTTP::Error::BadRequest => e
+        case e.json['error']
+        when 'reason_required'
+          @error = :reason_required
+        else
+          raise
+        end
       end
+
+      def cancel
+        response = Cased.clients.guard.post("#{api_url}/cancel", user_token: authentication.token)
+        self.session = response.body if response.success?
+
+        canceled?
+      end
+
+      def cased_category
+        :guard_session
+      end
+
+      def cased_id
+        id
+      end
+
+      def cased_context(category: cased_category)
+        {
+          "#{category}_id".to_sym => cased_id,
+          category.to_sym => to_s,
+        }
+      end
+
+      private
+
+      attr_reader :error
     end
   end
 end

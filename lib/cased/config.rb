@@ -46,6 +46,15 @@ module Cased
     #    end
     attr_reader :guard_application_key
 
+    # @example
+    #    GUARD_USER_TOKEN="user_1oFqlROLNRGVLOXJSsHkJiVmylr" rails server
+    #
+    # @example
+    #    Cased.configure do |config|
+    #      config.guard_user_token = "user_1oFqlROLNRGVLOXJSsHkJiVmylr"
+    #    end
+    attr_reader :guard_user_token
+
     # The URL to publish audit events to. Defaults to https://publish.cased.com
     #
     # @example
@@ -125,6 +134,7 @@ module Cased
       @api_url = ENV.fetch('CASED_API_URL', 'https://api.cased.com')
       @publish_url = ENV.fetch('CASED_PUBLISH_URL', 'https://publish.cased.com')
       @guard_application_key = ENV['GUARD_APPLICATION_KEY']
+      @guard_user_token = ENV['GUARD_USER_TOKEN']
       @publish_key = ENV['CASED_PUBLISH_KEY']
       @silence = !ENV['CASED_SILENCE'].nil?
       @policy_keys = Hash.new do |hash, key|
