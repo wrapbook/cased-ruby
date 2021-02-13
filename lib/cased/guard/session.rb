@@ -13,8 +13,6 @@ module Cased
         authentication = Cased::Guard::Authentication.new
 
         response = Cased.clients.guard.get("guard/sessions/#{guard_session_id}", user_token: authentication.token)
-        return unless response.success?
-
         new.tap do |session|
           session.session = response.body
         end
@@ -99,6 +97,7 @@ module Cased
         @authentication = Cased::Guard::Authentication.new
         @reason = reason
         @metadata = metadata
+        @requester = {}
         @responder = {}
         @guard_application = {}
       end
@@ -123,7 +122,7 @@ module Cased
         @ip_address = session.fetch('ip_address')
         @requester = session.fetch('requester')
         @responded_at = session['responded_at']
-        @responder = session['responder']
+        @responder = session['responder'] || {}
         @guard_application = session.fetch('guard_application')
       end
 
@@ -166,16 +165,18 @@ module Cased
         return false unless id.nil?
 
         response = Cased.clients.guard.post('guard/sessions', user_token: authentication.token, reason: reason, metadata: metadata)
-        self.session = response.body if response.success?
+        if response.success?
+          self.session = response.body
+        else
+          case response.body['error']
+          when 'reason_required'
+            @error = :reason_required
+          else
+            raise
+          end
+        end
 
         response.success?
-      rescue Cased::HTTP::Error::BadRequest => e
-        case e.json['error']
-        when 'reason_required'
-          @error = :reason_required
-        else
-          raise
-        end
       end
 
       def cancel

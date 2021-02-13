@@ -7,7 +7,8 @@ require 'faraday_middleware'
 module Cased
   module HTTP
     class Client
-      def initialize(url:, api_key:)
+      def initialize(url:, api_key:, raise_on_errors: false)
+        @raise_on_errors = raise_on_errors
         @client = Faraday.new(url: url) do |conn|
           conn.headers[:user_agent] = "cased-ruby/v#{Cased::VERSION}"
           conn.headers[:content_type] = 'application/json'
@@ -72,11 +73,17 @@ module Cased
 
       def request(method, url = nil, params_or_body = nil, headers = nil, &block)
         response = @client.send(method, url, params_or_body, headers, &block)
-        return response if response.success?
 
-        # TODO: Look to return a Cased::Response here with error wrapped.
-        klass = Cased::HTTP::Error.class_from_response(response)
-        raise klass.from_response(response)
+        if !response.success? && raise_on_errors?
+          klass = Cased::HTTP::Error.class_from_response(response)
+          raise klass.from_response(response)
+        else
+          response
+        end
+      end
+
+      def raise_on_errors?
+        @raise_on_errors
       end
     end
   end
