@@ -6,4 +6,5 @@ module Cased
 end
 
 require 'cased/guard/session'
+require 'cased/guard/sessions/intent'
 require 'cased/guard/interactive_session'
