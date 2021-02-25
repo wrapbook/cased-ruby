@@ -5,6 +5,7 @@ module Cased
   end
 end
 
+require 'cased/cli/record'
 require 'cased/cli/session'
 require 'cased/cli/sessions/intent'
 require 'cased/cli/interactive_session'
