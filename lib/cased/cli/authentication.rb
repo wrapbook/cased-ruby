@@ -3,7 +3,7 @@
 require 'pathname'
 
 module Cased
-  module Guard
+  module CLI
     class Authentication
       attr_reader :directory
       attr_reader :credentials_path

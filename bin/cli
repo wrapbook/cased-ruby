@@ -4,7 +4,7 @@
 require 'bundler/setup'
 require 'cased-ruby'
 
-session = Cased::Guard::InteractiveSession.new
+session = Cased::CLI::InteractiveSession.new
 session.create
 
 puts 'Something destructive'

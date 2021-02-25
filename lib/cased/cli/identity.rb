@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module Cased
-  module Guard
+  module CLI
     class Identity
       def initialize
         @timeout = 30
       end
 
       def identify
-        response = Cased.clients.guard.post('guard/applications/users/identify')
+        response = Cased.clients.cli.post('cli/applications/users/identify')
         case response.status
         when 201 # Created
           url = response.body.fetch('url')
@@ -24,7 +24,7 @@ module Cased
         user_id = nil
 
         while user_id.nil?
-          response = Cased.clients.guard.get(poll_url)
+          response = Cased.clients.cli.get(poll_url)
           user_id = response.body.dig('user', 'id')
           sleep 1 if user_id.nil?
         end

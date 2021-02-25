@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-require 'cased/guard/session'
+require 'cased/cli/session'
 
 module Cased
-  module Guard
+  module CLI
     class InteractiveSession
       attr_reader :session
 
       def initialize(reason: nil, metadata: {})
-        @session = Cased::Guard::Session.new(reason: reason, metadata: metadata)
+        @session = Cased::CLI::Session.new(reason: reason, metadata: metadata)
       end
 
       def create
@@ -24,7 +24,7 @@ module Cased
           puts "Could not find credentials at #{session.authentication.credentials_path}, looking up now…"
         end
 
-        identity = Cased::Guard::Identity.new
+        identity = Cased::CLI::Identity.new
         session.authentication.token = identity.identify
 
         retry

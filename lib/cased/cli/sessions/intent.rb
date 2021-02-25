@@ -3,7 +3,7 @@
 require 'jwt'
 
 module Cased
-  module Guard
+  module CLI
     module Sessions
       class Intent
         attr_reader :reason_required

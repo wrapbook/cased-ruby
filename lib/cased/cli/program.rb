@@ -3,7 +3,7 @@
 require 'pathname'
 
 module Cased
-  module Guard
+  module CLI
     class Program
       def exists?
         !credentials.nil?

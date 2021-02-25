@@ -1,100 +1,100 @@
 # frozen_string_literal: true
 
-require 'cased/guard/authentication'
-require 'cased/guard/identity'
+require 'cased/cli/authentication'
+require 'cased/cli/identity'
 require 'cased/model'
 
 module Cased
-  module Guard
+  module CLI
     class Session
       include Cased::Model
 
       def self.find(guard_session_id)
-        authentication = Cased::Guard::Authentication.new
+        authentication = Cased::CLI::Authentication.new
 
-        response = Cased.clients.guard.get("guard/sessions/#{guard_session_id}", user_token: authentication.token)
+        response = Cased.clients.cli.get("cli/sessions/#{guard_session_id}", user_token: authentication.token)
         new.tap do |session|
           session.session = response.body
         end
       end
 
-      # @return [Cased::Guard::Authentication]
+      # @return [Cased::CLI::Authentication]
       attr_reader :authentication
 
-      # Public: The Guard session ID
+      # Public: The CLI session ID
       # @example
       #   session.id #=> "guard_session_1oFqm5GBQYwhH8pfIpnS0A5QgFJ"
       # @return [String, nil]
       attr_reader :id
 
-      # Public: The Guard session web URL
+      # Public: The CLI session web URL
       # @example
-      #   session.url #=> "https://api.cased.com/guard/programs/ruby/sessions/guard_session_1oFqm5GBQYwhH8pfIpnS0A5QgFJ"
+      #   session.url #=> "https://api.cased.com/cli/programs/ruby/sessions/guard_session_1oFqm5GBQYwhH8pfIpnS0A5QgFJ"
       # @return [String, nil]
       attr_reader :url
 
-      # Public: The Guard session API URL
+      # Public: The CLI session API URL
       # @example
-      #   session.api_url #=> "https://api.cased.com/guard/sessions/guard_session_1oFqm5GBQYwhH8pfIpnS0A5QgFJ"
+      #   session.api_url #=> "https://api.cased.com/cli/sessions/guard_session_1oFqm5GBQYwhH8pfIpnS0A5QgFJ"
       # @return [String, nil]
       attr_reader :api_url
 
-      # Public: The current state the Guard session is in
+      # Public: The current state the CLI session is in
       # @example
       #   session.api_url #=> "approved"
       # @return [String, nil]
       attr_reader :state
 
-      # Public: Command that invoked Guard session.
+      # Public: Command that invoked CLI session.
       # @example
       #   session.command #=> "/usr/local/bin/rails console"
       # @return [String]
       attr_accessor :command
 
-      # Public: Additional user supplied metadata about the Guard session.
+      # Public: Additional user supplied metadata about the CLI session.
       # @example
       #   session.metadata #=> {"hostname" => "Mac.local"}
       # @return [Hash]
       attr_accessor :metadata
 
-      # Public: The user supplied reason for the Guard session for taking place.
+      # Public: The user supplied reason for the CLI session for taking place.
       # @example
       #   session.reason #=> "Investigating customer support ticket."
       # @return [String, nil]
       attr_accessor :reason
 
-      # Public: The client's IP V4 or IP V6 address that initiated the Guard session.
+      # Public: The client's IP V4 or IP V6 address that initiated the CLI session.
       # @example
       #   session.reason #=> "1.1.1.1"
       # @return [String, nil]
       attr_reader :ip_address
 
-      # Public: The Cased user that requested the Guard session.
+      # Public: The Cased user that requested the CLI session.
       # @example
       #   session.requester #=> {"id" => "user_1oFqlROLNRGVLOXJSsHkJiVmylr"}
       # @return [Hash, nil]
       attr_reader :requester
 
-      # Public: The Cased user that requested the Guard session.
+      # Public: The Cased user that requested the CLI session.
       # @example
       #   session.responded_at #=> "2021-02-10 12:08:44 -0800"
       # @return [Time, nil]
       attr_reader :responded_at
 
-      # Public: The Cased user that responded to the Guard session.
+      # Public: The Cased user that responded to the CLI session.
       # @example
       #   session.responder #=> {"id" => "user_1oFqlROLNRGVLOXJSsHkJiVmylr"}
       # @return [Hash, nil]
       attr_reader :responder
 
-      # Public: The Guard application that the Guard session belongs to.
+      # Public: The CLI application that the CLI session belongs to.
       # @example
       #   session.guard_application #=> {"id" => "guard_application_1oFqltbMqSEtJQKRCAYQNrQoXsS"}
       # @return [Hash, nil]
       attr_reader :guard_application
 
       def initialize(reason: nil, metadata: {})
-        @authentication = Cased::Guard::Authentication.new
+        @authentication = Cased::CLI::Authentication.new
         @reason = reason
         @metadata = metadata
         @requester = {}
@@ -149,7 +149,7 @@ module Cased
       def refresh
         return false unless api_url
 
-        response = Cased.clients.guard.get(api_url, user_token: authentication.token)
+        response = Cased.clients.cli.get(api_url, user_token: authentication.token)
         self.session = response.body if response.success?
       end
 
@@ -164,7 +164,7 @@ module Cased
       def create
         return false unless id.nil?
 
-        response = Cased.clients.guard.post('guard/sessions', user_token: authentication.token, reason: reason, metadata: metadata)
+        response = Cased.clients.cli.post('cli/sessions', user_token: authentication.token, reason: reason, metadata: metadata)
         if response.success?
           self.session = response.body
         else
@@ -180,14 +180,14 @@ module Cased
       end
 
       def cancel
-        response = Cased.clients.guard.post("#{api_url}/cancel", user_token: authentication.token)
+        response = Cased.clients.cli.post("#{api_url}/cancel", user_token: authentication.token)
         self.session = response.body if response.success?
 
         canceled?
       end
 
       def cased_category
-        :guard_session
+        :cli
       end
 
       def cased_id
