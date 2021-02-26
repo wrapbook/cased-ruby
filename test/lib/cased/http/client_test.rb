@@ -160,7 +160,7 @@ module Cased
           .to_return(
             status: 300,
             headers: {
-              'Content-Type' => 'application/json'
+              'Content-Type' => 'application/json',
             },
             body: '{"error": "missing_api_key"}',
           )
@@ -171,7 +171,7 @@ module Cased
         end
 
         assert_equal 300, exception.code
-        assert_equal "{\"error\":\"missing_api_key\"}", exception.message
+        assert_equal '{"error":"missing_api_key"}', exception.message
       end
 
       def test_raises_generic_redirection_error_if_not_in_errors_table
