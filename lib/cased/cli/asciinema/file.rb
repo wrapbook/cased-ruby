@@ -14,6 +14,15 @@ module Cased
           new(writer.header, writer.stream)
         end
 
+        def self.from_cast(cast)
+          stream = cast.split("\n").collect do |data|
+            JSON.parse(data)
+          end
+          header = stream.shift
+
+          new(header, stream)
+        end
+
         # Required
         attr_reader :header
         attr_reader :version
