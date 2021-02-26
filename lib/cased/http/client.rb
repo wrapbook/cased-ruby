@@ -9,7 +9,7 @@ module Cased
     class Client
       def initialize(url:, api_key:, raise_on_errors: false)
         @raise_on_errors = raise_on_errors
-        @client = Faraday.new(url: url) do |conn|
+        @client = ::Faraday.new(url: url) do |conn|
           conn.headers[:user_agent] = "cased-ruby/v#{Cased::VERSION}"
           conn.headers[:content_type] = 'application/json'
           conn.headers[:accept] = 'application/json'
