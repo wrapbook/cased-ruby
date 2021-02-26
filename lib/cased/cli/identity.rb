@@ -15,7 +15,7 @@ module Cased
           puts "Please visit:\n#{url}"
           poll(response.body['api_url'])
         when 401 # Unauthorized
-
+          false
         end
       end
 
@@ -24,6 +24,7 @@ module Cased
         user_id = nil
 
         while user_id.nil?
+          count += 1
           response = Cased.clients.cli.get(poll_url)
           user_id = response.body.dig('user', 'id')
           sleep 1 if user_id.nil?

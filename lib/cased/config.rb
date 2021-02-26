@@ -206,7 +206,7 @@ module Cased
     private
 
     def parse_bool(val)
-      ['1', 'true', 't'].include?(val&.downcase)
+      %w[1 true t].include?(val&.downcase)
     end
   end
 end

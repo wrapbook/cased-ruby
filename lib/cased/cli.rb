@@ -5,6 +5,8 @@ module Cased
   end
 end
 
+require 'cased/cli/asciinema/writer'
+require 'cased/cli/asciinema/file'
 require 'cased/cli/recorder'
 require 'cased/cli/session'
 require 'cased/cli/sessions/intent'

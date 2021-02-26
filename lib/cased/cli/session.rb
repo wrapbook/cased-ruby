@@ -21,6 +21,7 @@ module Cased
 
       def self.current
         return @current if defined?(@current)
+
         @current = if ENV['GUARD_SESSION_ID']
           Cased::CLI::Session.find(ENV['GUARD_SESSION_ID'])
         end
@@ -30,8 +31,8 @@ module Cased
         current.present?
       end
 
-      def self.current=(session)
-        @current = session
+      class << self
+        attr_writer :current
       end
 
       # @return [Cased::CLI::Authentication]
@@ -207,7 +208,9 @@ module Cased
         })
         recorder.start
 
-        Cased.clients.cli.put(api_record_url, recording: recorder.to_cast, user_token: authentication.token)
+        Cased.clients.cli.put(api_record_url,
+          recording: recorder.writer.to_cast,
+          user_token: authentication.token)
       end
 
       def create
@@ -217,8 +220,7 @@ module Cased
           user_token: authentication.token,
           reason: reason,
           metadata: metadata,
-          command: command,
-        )
+          command: command)
         if response.success?
           self.session = response.body
         else
