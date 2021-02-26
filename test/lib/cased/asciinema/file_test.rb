@@ -349,38 +349,6 @@ module Cased
             [4.633844,"o","s"]
             [4.755115,"o","t"]
           CAST
-
-          header = {
-            'version' => 2,
-            'width' => 80,
-            'height' => 24,
-            'timestamp' => 1_614_314_615,
-            'duration' => 0.123456,
-            'idle_time_limit' => 1,
-            'command' => 'irb',
-            'title' => 'irb shell',
-            'env' => {
-              'TERM' => 'xterm-256color',
-              'SHELL' => 'sh',
-            },
-            'theme' => {
-              'fg' => '#d0d0d0',
-              'bg' => '#212121',
-              'palette' => '#151515:#ac4142:#7e8e50:#e5b567:#6c99bb:#9f4e85:#7dd6cf:#d0d0d0:#505050:#ac4142:#7e8e50:#e5b567:#6c99bb:#9f4e85:#7dd6cf:#f5f5f5',
-            },
-          }
-          stream = [
-            [3.793686, 'o', 'U'],
-            [3.883639, 'o', 's'],
-            [4.035233, 'o', 'e'],
-            [4.153766, 'o', 'r'],
-            [4.230043, 'o', '.'],
-            [4.348715, 'o', 'f'],
-            [4.469897, 'o', 'i'],
-            [4.513506, 'o', 'r'],
-            [4.633844, 'o', 's'],
-            [4.755115, 'o', 't'],
-          ]
           file = Cased::CLI::Asciinema::File.from_cast(cast)
 
           assert_equal cast, file.to_cast

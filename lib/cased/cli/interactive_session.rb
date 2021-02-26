@@ -5,7 +5,7 @@ require 'cased/cli/session'
 module Cased
   module CLI
     class InteractiveSession
-      def self.start(reason: nil, command: nil, metadata: {}, &block)
+      def self.start(reason: nil, command: nil, metadata: {})
         return if Cased::CLI::Session.current&.approved?
 
         new(reason: reason, command: command, metadata: metadata).create
