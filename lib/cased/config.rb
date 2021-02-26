@@ -44,7 +44,7 @@ module Cased
     #    Cased.configure do |config|
     #      config.guard_application_key = "guard_application_1ntKX0P4vUbKoc0lMWGiSbrBHcH"
     #    end
-    attr_reader :guard_application_key
+    attr_accessor :guard_application_key
 
     # @example
     #    GUARD_USER_TOKEN="user_1oFqlROLNRGVLOXJSsHkJiVmylr" rails server
@@ -53,7 +53,16 @@ module Cased
     #    Cased.configure do |config|
     #      config.guard_user_token = "user_1oFqlROLNRGVLOXJSsHkJiVmylr"
     #    end
-    attr_reader :guard_user_token
+    attr_accessor :guard_user_token
+
+    # @example
+    #    DENY_IF_UNREACHABLE="1" rails server
+    #
+    # @example
+    #    Cased.configure do |config|
+    #      config.guard_deny_if_unreachable = true
+    #    end
+    attr_accessor :guard_deny_if_unreachable
 
     # The URL to publish audit events to. Defaults to https://publish.cased.com
     #
@@ -135,6 +144,7 @@ module Cased
       @publish_url = ENV.fetch('CASED_PUBLISH_URL', 'https://publish.cased.com')
       @guard_application_key = ENV['GUARD_APPLICATION_KEY']
       @guard_user_token = ENV['GUARD_USER_TOKEN']
+      @guard_deny_if_unreachable = parse_bool(ENV['DENY_IF_UNREACHABLE'])
       @publish_key = ENV['CASED_PUBLISH_KEY']
       @silence = !ENV['CASED_SILENCE'].nil?
       @policy_keys = Hash.new do |hash, key|
@@ -187,6 +197,16 @@ module Cased
 
     def silence?
       @silence || !ENV['CASED_SILENCE'].nil?
+    end
+
+    def guard_deny_if_unreachable?
+      @guard_deny_if_unreachable
+    end
+
+    private
+
+    def parse_bool(val)
+      ['1', 'true', 't'].include?(val&.downcase)
     end
   end
 end

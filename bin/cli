@@ -4,7 +4,12 @@
 require 'bundler/setup'
 require 'cased-ruby'
 
-session = Cased::CLI::InteractiveSession.new
-session.create
+Cased.configure do |config|
+  config.api_url = 'http://localhost:3000/api'
+  config.guard_application_key = 'guard_application_1oFqltbMqSEtJQKRCAYQNrQoXsS'
+  config.guard_deny_if_unreachable = true
+end
+
+Cased::CLI::InteractiveSession.start
 
 puts 'Something destructive'

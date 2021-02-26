@@ -2,6 +2,7 @@
 
 require 'cased/cli/authentication'
 require 'cased/cli/identity'
+require 'cased/cli/recorder'
 require 'cased/model'
 
 module Cased
@@ -16,6 +17,21 @@ module Cased
         new.tap do |session|
           session.session = response.body
         end
+      end
+
+      def self.current
+        return @current if defined?(@current)
+        @current = if ENV['GUARD_SESSION_ID']
+          Cased::CLI::Session.find(ENV['GUARD_SESSION_ID'])
+        end
+      end
+
+      def self.current?
+        current.present?
+      end
+
+      def self.current=(session)
+        @current = session
       end
 
       # @return [Cased::CLI::Authentication]
@@ -38,6 +54,12 @@ module Cased
       #   session.api_url #=> "https://api.cased.com/cli/sessions/guard_session_1oFqm5GBQYwhH8pfIpnS0A5QgFJ"
       # @return [String, nil]
       attr_reader :api_url
+
+      # Public: The CLI session record API URL
+      # @example
+      #   session.api_record_url #=> "https://api.cased.com/cli/sessions/guard_session_1oFqm5GBQYwhH8pfIpnS0A5QgFJ/record"
+      # @return [String, nil]
+      attr_reader :api_record_url
 
       # Public: The current state the CLI session is in
       # @example
@@ -93,9 +115,10 @@ module Cased
       # @return [Hash, nil]
       attr_reader :guard_application
 
-      def initialize(reason: nil, metadata: {})
+      def initialize(reason: nil, command: nil, metadata: {})
         @authentication = Cased::CLI::Authentication.new
         @reason = reason
+        @command = command
         @metadata = metadata
         @requester = {}
         @responder = {}
@@ -114,6 +137,7 @@ module Cased
         @error = nil
         @id = session.fetch('id')
         @api_url = session.fetch('api_url')
+        @api_record_url = session.fetch('api_record_url')
         @url = session.fetch('url')
         @state = session.fetch('state')
         @command = session.fetch('command')
@@ -157,22 +181,55 @@ module Cased
         !error.nil?
       end
 
+      def success?
+        id && !error?
+      end
+
       def reason_required?
         error == :reason_required || guard_application.dig('settings', 'reason_required')
+      end
+
+      def unauthorized?
+        error == :unauthorized
+      end
+
+      def record_output?
+        guard_application.dig('settings', 'record_output') || false
+      end
+
+      def record
+        return unless recordable? && record_output?
+
+        recorder = Cased::CLI::Recorder.new(command.split(' '), env: {
+          'GUARD_SESSION_ID' => id,
+          'GUARD_APPLICATION_ID' => guard_application.fetch('id'),
+          'GUARD_USER_TOKEN' => requester.fetch('id'),
+        })
+        recorder.start
+
+        Cased.clients.cli.put(api_record_url, recording: recorder.to_cast, user_token: authentication.token)
       end
 
       def create
         return false unless id.nil?
 
-        response = Cased.clients.cli.post('cli/sessions', user_token: authentication.token, reason: reason, metadata: metadata)
+        response = Cased.clients.cli.post('cli/sessions',
+          user_token: authentication.token,
+          reason: reason,
+          metadata: metadata,
+          command: command,
+        )
         if response.success?
           self.session = response.body
         else
           case response.body['error']
           when 'reason_required'
             @error = :reason_required
+          when 'unauthorized'
+            @error = :unauthorized
           else
-            raise
+            @error = true
+            return false
           end
         end
 
@@ -202,6 +259,10 @@ module Cased
       end
 
       private
+
+      def recordable?
+        STDOUT.isatty
+      end
 
       attr_reader :error
     end
