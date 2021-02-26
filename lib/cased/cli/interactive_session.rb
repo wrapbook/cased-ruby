@@ -6,7 +6,7 @@ module Cased
   module CLI
     class InteractiveSession
       def self.start(reason: nil, command: nil, metadata: {})
-        return if Cased::CLI::Session.current&.approved?
+        return Cased::CLI::Session.current if Cased::CLI::Session.current&.approved?
 
         new(reason: reason, command: command, metadata: metadata).create
       end
@@ -41,6 +41,8 @@ module Cased
           puts 'Could not create session'
           exit 1 if Cased.config.guard_deny_if_unreachable?
         end
+
+        session
       end
 
       private

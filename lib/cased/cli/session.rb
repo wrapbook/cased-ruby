@@ -260,11 +260,11 @@ module Cased
         }
       end
 
-      private
-
       def recordable?
         STDOUT.isatty
       end
+
+      private
 
       attr_reader :error
     end
