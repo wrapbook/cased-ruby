@@ -116,8 +116,8 @@ module Cased
       # @return [Hash, nil]
       attr_reader :guard_application
 
-      def initialize(reason: nil, command: nil, metadata: {})
-        @authentication = Cased::CLI::Authentication.new
+      def initialize(reason: nil, command: nil, metadata: {}, authentication: nil)
+        @authentication = authentication || Cased::CLI::Authentication.new
         @reason = reason
         @command = command
         @metadata = metadata
