@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Cased
   module CLI
     module Log
@@ -13,7 +15,7 @@ module Cased
         puts string(text)
       end
 
-      def self.color(text, color, bold = false) # :doc:
+      def self.color(text, color, bold = false)
         color = self.class.const_get(color.upcase) if color.is_a?(Symbol)
         bold  = bold ? BOLD : ''
         "#{bold}#{color}#{text}#{CLEAR}"
