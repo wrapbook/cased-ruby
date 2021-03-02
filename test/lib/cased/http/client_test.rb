@@ -157,22 +157,28 @@ module Cased
 
       def test_exception_exposes_status_code_and_message
         stub_request(:post, 'https://publish.cased.com/')
-          .to_return(status: 300, body: 'Error message')
+          .to_return(
+            status: 300,
+            headers: {
+              'Content-Type' => 'application/json',
+            },
+            body: '{"error": "missing_api_key"}',
+          )
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         exception = assert_raises(Cased::HTTP::Error::RedirectionError) do
           http.post
         end
 
         assert_equal 300, exception.code
-        assert_equal 'Error message', exception.message
+        assert_equal '{"error":"missing_api_key"}', exception.message
       end
 
       def test_raises_generic_redirection_error_if_not_in_errors_table
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 300)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::RedirectionError) do
           http.post
         end
@@ -182,7 +188,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 1)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error) do
           http.post
         end
@@ -192,7 +198,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 499)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::ClientError) do
           http.post
         end
@@ -202,7 +208,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 505)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::ServerError) do
           http.post
         end
@@ -212,7 +218,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 400)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::BadRequest) do
           http.post
         end
@@ -222,7 +228,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 401)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::Unauthorized) do
           http.post
         end
@@ -232,7 +238,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 403)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::Forbidden) do
           http.post
         end
@@ -242,7 +248,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 404)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::NotFound) do
           http.post
         end
@@ -252,7 +258,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 406)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::NotAcceptable) do
           http.post
         end
@@ -262,7 +268,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 408)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::RequestTimeout) do
           http.post
         end
@@ -272,7 +278,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 422)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::UnprocessableEntity) do
           http.post
         end
@@ -282,7 +288,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 429)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::TooManyRequests) do
           http.post
         end
@@ -292,7 +298,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 500)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::InternalServerError) do
           http.post
         end
@@ -302,7 +308,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 502)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::BadGateway) do
           http.post
         end
@@ -312,7 +318,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 503)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::ServiceUnavailable) do
           http.post
         end
@@ -322,7 +328,7 @@ module Cased
         stub_request(:post, 'https://publish.cased.com/')
           .to_return(status: 504)
 
-        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345')
+        http = Cased::HTTP::Client.new(url: 'https://publish.cased.com/', api_key: '12345', raise_on_errors: true)
         assert_raises(Cased::HTTP::Error::GatewayTimeout) do
           http.post
         end

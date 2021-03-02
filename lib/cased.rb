@@ -15,6 +15,7 @@ require 'cased/sensitive'
 require 'cased/publishers'
 require 'cased/test_helper'
 require 'cased/instrumentation/log_subscriber'
+require 'cased/cli'
 
 # Integrations
 begin

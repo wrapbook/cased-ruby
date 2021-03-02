@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require 'cased/collection_response'
+require 'forwardable'
 
 module Cased
   class Query
+    extend Forwardable
+
     # @param client [Cased::HTTP::Client] the HTTP client authorized to query an
     #   audit trail policy
     # @param phrase [String, nil] the phrase to search for audit trail events
@@ -43,7 +46,8 @@ module Cased
     end
 
     # If any of these methods are called we need the request to fulfil the response.
-    delegate :results, \
+    def_delegators :response, \
+      :results, \
       :total_count, \
       :total_pages, \
       :next_page_url?, \
@@ -64,8 +68,7 @@ module Cased
       :last_page?, \
       :error, \
       :error?, \
-      :success?, \
-      to: :response
+      :success?
 
     def response
       return @response if defined?(@response)

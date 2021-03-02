@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'cased-ruby'
+
+Cased.configure do |config|
+  config.guard_application_key = 'guard_application_1oFqltbMqSEtJQKRCAYQNrQoXsS'
+  config.guard_deny_if_unreachable = true
+end
+
+Cased::CLI::InteractiveSession.start
+
+puts 'Something destructive'
