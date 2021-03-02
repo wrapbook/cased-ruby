@@ -19,6 +19,8 @@ module Cased
         end
       end
 
+      # If we're inside of a recorded session we can lookup the session
+      # we're in.
       def self.current
         return @current if defined?(@current)
 

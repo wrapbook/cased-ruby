@@ -15,6 +15,7 @@ module Cased
       attr_reader :options
       attr_accessor :writer
 
+      # @return [Boolean] if CLI session is being recorded.
       def self.recording?
         ENV[KEY] == '1'
       end
