@@ -4,6 +4,12 @@ require 'cased/cli/session'
 
 module Cased
   module CLI
+    # InteractiveSession is responsible for initiating a Cased CLI session and
+    # responding to all its possible states.
+    #
+    # InteractiveSession is intended to be used where a TTY is present to handle
+    # the entire flow from authentication, reason required, waiting for
+    # approval, canceled, or timed out.
     class InteractiveSession
       def self.start(reason: nil, command: nil, metadata: {})
         return Cased::CLI::Session.current if Cased::CLI::Session.current&.approved?
