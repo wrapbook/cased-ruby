@@ -12,7 +12,8 @@ module Cased
         case response.status
         when 201 # Created
           url = response.body.fetch('url')
-          puts "Please visit:\n#{url}"
+          Cased::CLI::Log.log "To login, please visit:"
+          puts url
           poll(response.body['api_url'])
         when 401 # Unauthorized
           false
