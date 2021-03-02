@@ -8,6 +8,8 @@ module Cased
       def self.start(reason: nil, command: nil, metadata: {})
         return Cased::CLI::Session.current if Cased::CLI::Session.current&.approved?
 
+        Cased::CLI::Log.log 'Running under Cased CLI.'
+
         new(reason: reason, command: command, metadata: metadata).create
       end
 
@@ -26,9 +28,9 @@ module Cased
           handle_state(session.state)
         elsif session.unauthorized?
           if session.authentication.exists?
-            puts "Existing credentials at #{session.authentication.credentials_path} are not valid."
+            Cased::CLI::Log.log "Existing credentials at #{session.authentication.credentials_path} are not valid."
           else
-            puts "Could not find credentials at #{session.authentication.credentials_path}, looking up now…"
+            Cased::CLI::Log.log "Could not find credentials at #{session.authentication.credentials_path}, looking up now…"
           end
 
           identity = Cased::CLI::Identity.new
@@ -38,7 +40,7 @@ module Cased
         elsif session.reason_required?
           reason_prompt && create
         else
-          puts 'Could not create session'
+          Cased::CLI::Log.log 'Could not start CLI session.'
           exit 1 if Cased.config.guard_deny_if_unreachable?
         end
 
@@ -48,7 +50,7 @@ module Cased
       private
 
       def reason_prompt
-        print 'Enter a reason: '
+        print Cased::CLI::Log.string 'Please enter a reason for access: '
         session.reason = gets.chomp
       end
 
@@ -59,16 +61,16 @@ module Cased
       def handle_state(state)
         case state
         when 'approved'
-          puts 'Session has been approved'
+          Cased::CLI::Log.log 'CLI session has been approved'
           session.record
         when 'requested'
           wait_for_approval
         when 'denied'
-          puts 'Session has been denied'
+          Cased::CLI::Log.log 'CLI session has been denied'
         when 'timed_out'
-          puts 'Session has timed out'
+          Cased::CLI::Log.log 'CLI session has timed out'
         when 'canceled'
-          puts 'Session has been canceled'
+          Cased::CLI::Log.log 'CLI session has been canceled'
         end
       end
     end
