@@ -201,6 +201,8 @@ module Cased
       def record
         return unless recordable? && record_output?
 
+        Cased::CLI::Log.log 'CLI session is now recording'
+
         recorder = Cased::CLI::Recorder.new(command.split(' '), env: {
           'GUARD_SESSION_ID' => id,
           'GUARD_APPLICATION_ID' => guard_application.fetch('id'),
@@ -211,6 +213,8 @@ module Cased
         Cased.clients.cli.put(api_record_url,
           recording: recorder.writer.to_cast,
           user_token: authentication.token)
+
+        Cased::CLI::Log.log 'CLI session recorded'
       end
 
       def create
