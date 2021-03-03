@@ -7,14 +7,17 @@ A Cased client for Ruby applications in your organization to control and monitor
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
-  - [Publishing events to Cased](#publishing-events-to-cased)
-  - [Retrieving events from a Cased audit trail](#retrieving-events-from-a-cased-audit-trail)
-  - [Retrieving events from multiple Cased audit trails](#retrieving-events-from-multiple-cased-audit-trails)
-  - [Exporting events](#exporting-events)
-  - [Masking & filtering sensitive information](#masking--filtering-sensitive-information)
-  - [Disable publishing events](#disable-publishing-events)
-  - [Context](#context)
-  - [Testing](#testing)
+  - [Cased CLI](#cased-cli)
+    - [Starting an approval workflow](#starting-an-approval-workflow)
+  - [Audit trails](#audit-trails)
+    - [Publishing events to Cased](#publishing-events-to-cased)
+    - [Retrieving events from a Cased audit trail](#retrieving-events-from-a-cased-audit-trail)
+    - [Retrieving events from multiple Cased audit trails](#retrieving-events-from-multiple-cased-audit-trails)
+    - [Exporting events](#exporting-events)
+    - [Masking & filtering sensitive information](#masking--filtering-sensitive-information)
+    - [Disable publishing events](#disable-publishing-events)
+    - [Context](#context)
+    - [Testing](#testing)
 - [Customizing cased-ruby](#customizing-cased-ruby)
 - [Contributing](#contributing)
 
@@ -56,6 +59,9 @@ Cased.configure do |config|
   # CASED_PUBLISH_URL=https://publish.cased.com
   config.publish_url = 'https://publish.cased.com'
 
+  # CASED_URL=https://app.cased.com
+  config.url = 'https://app.cased.com'
+
   # CASED_API_URL=https://api.cased.com
   config.api_url = 'https://api.cased.com'
 
@@ -75,7 +81,71 @@ end
 
 ## Usage
 
-### Publishing events to Cased
+### Cased CLI
+
+#### Starting an approval workflow
+
+To start an approval workflow you must first obtain your application key and the
+user token for who is requesting access.
+
+```ruby
+Cased.configure do |config|
+  config.guard_application_key = 'guard_application_1pG43HF3aRHjNTTm10zzu0tngBO'
+end
+
+authentication = Cased::CLI::Authentication.new(token: 'user_1pG43D1AzTjLR8XWJHj8B3aNZ4Y')
+session = Cased::CLI::Session.new(
+  authentication: authentication,
+  reason: 'I need export our GitHub issues.',
+  metadata: {
+    organization: 'GitHub',
+  },
+)
+
+if session.create && session.approved?
+  github.issues.each do |issue|
+    puts issue.title
+  end
+else
+  puts 'Unauthorized to export GitHub issues.'
+end
+```
+
+If you do not have the user token you can always request it interactively.
+[Cased::CLI::Identity#identify](https://github.com/cased/cased-ruby/blob/3b0c8ebd37ba7deb83236be7dba4d52c74d7e4e5/lib/cased/cli/identity.rb#L10-L21)
+is a blocking operation prompting the user to visit Cased to identify
+themselves, returning their user token upon identifying themselves which can be
+used to start your session.
+
+```ruby
+Cased.configure do |config|
+  config.guard_application_key = 'guard_application_1pG43HF3aRHjNTTm10zzu0tngBO'
+end
+
+authentication = Cased::CLI::Authentication.new
+identity = Cased::CLI::Identity.new
+authentication.token = identity.identify
+
+session = Cased::CLI::Session.new(
+  authentication: authentication,
+  reason: 'I need export our GitHub issues.',
+  metadata: {
+    organization: 'GitHub',
+  },
+)
+
+if session.create && session.approved?
+  github.issues.each do |issue|
+    puts issue.title
+  end
+else
+  puts 'Unauthorized to export GitHub issues.'
+end
+```
+
+### Audit trails
+
+#### Publishing events to Cased
 
 There are two ways to publish your first Cased event.
 
@@ -170,7 +240,7 @@ Both examples above are equivelent in that they publish the following `credit_ca
 }
 ```
 
-### Retrieving events from a Cased audit trail
+#### Retrieving events from a Cased audit trail
 
 If you plan on retrieving audit events from your Cased audit trail you must use a Cased API key.
 
@@ -193,7 +263,7 @@ query.success? # => true
 query.error? # => false
 ```
 
-### Retrieving events from multiple Cased audit trails
+#### Retrieving events from multiple Cased audit trails
 
 To retrieve audit events from one or more Cased audit trails you can configure multiple Cased Policy API keys and retrieve events for each one.
 
@@ -222,7 +292,7 @@ results.each do |event|
 end
 ```
 
-### Exporting events
+#### Exporting events
 
 Exporting events from Cased allows you to provide users with exports of their own data or to respond to data requests.
 
@@ -240,7 +310,7 @@ export = Cased.policy.exports.create(
 export.download_url # => https://api.cased.com/exports/export_1dSHQSNtAH90KA8zGTooMnmMdiD/download?token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlcl8xZFFwWThiQmdFd2RwbWRwVnJydER6TVg0ZkgiLCJ
 ```
 
-### Masking & filtering sensitive information
+#### Masking & filtering sensitive information
 
 If you are handling sensitive information on behalf of your users you should consider masking or filtering any sensitive information.
 
@@ -257,7 +327,7 @@ Cased.publish(
 )
 ```
 
-### Console Usage
+#### Console Usage
 
 Most Cased events will be created by users from actions on the website from custom defined events or lifecycle callbacks. The exception is any console session where models may generate Cased events as you start to modify records.
 
@@ -268,7 +338,7 @@ By default any console session will include the hostname of where the console se
 Cased.context.push(actor: @actor)
 ```
 
-### Disable publishing events
+#### Disable publishing events
 
 Although rare, there may be times where you wish to disable publishing events to Cased. To do so wrap your transaction inside of a `Cased.disable` block:
 
@@ -284,7 +354,7 @@ Or you can configure the entire process to disable publishing events.
 CASED_DISABLE_PUBLISHING=1 bundle exec ruby crawl.rb
 ```
 
-### Context
+#### Context
 
 One of the most easiest ways to publish detailed events to Cased is to push contextual information on to the Cased context.
 
@@ -339,7 +409,7 @@ To clear/reset the context:
 Cased.context.clear
 ```
 
-### Testing
+#### Testing
 
 cased-ruby provides a test helper class that you can use to test events are being published to Cased.
 
@@ -390,7 +460,7 @@ class CreditCardTest < Test::Unit::TestCase
 end
 ```
 
-## Customizing cased-ruby
+### Customizing cased-ruby
 
 Out of the box cased-ruby takes care of serializing objects for you to the best of its ability, but you can customize cased-ruby should you like to fit your products needs.
 
