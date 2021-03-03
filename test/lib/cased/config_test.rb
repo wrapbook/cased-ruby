@@ -66,6 +66,29 @@ module Cased
       assert_equal true, config.raise_on_errors?
     end
 
+    def test_default_url
+      config = Cased::Config.new
+
+      assert_equal 'https://app.cased.com', config.url
+    end
+
+    def test_configure_url
+      config = Cased::Config.new
+      config.url = 'https://app.staging.cased.com'
+
+      assert_equal 'https://app.staging.cased.com', config.url
+    end
+
+    def test_configure_url_with_environment_variable
+      original_url = ENV['CASED_URL']
+      ENV['CASED_URL'] = 'https://app.staging.cased.com'
+      config = Cased::Config.new
+
+      assert_equal 'https://app.staging.cased.com', config.url
+    ensure
+      ENV['CASED_URL'] = original_url
+    end
+
     def test_default_api_url
       config = Cased::Config.new
 
