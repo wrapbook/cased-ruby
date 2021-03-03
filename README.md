@@ -65,6 +65,15 @@ Cased.configure do |config|
   # CASED_API_URL=https://api.cased.com
   config.api_url = 'https://api.cased.com'
 
+  # GUARD_APPLICATION_KEY=guard_application_1ntKX0P4vUbKoc0lMWGiSbrBHcH
+  config.guard_application_key = 'guard_application_1ntKX0P4vUbKoc0lMWGiSbrBHcH'
+
+  # GUARD_USER_TOKEN=user_1oFqlROLNRGVLOXJSsHkJiVmylr
+  config.guard_user_token = 'user_1oFqlROLNRGVLOXJSsHkJiVmylr'
+
+  # DENY_IF_UNREACHABLE=1
+  config.guard_deny_if_unreachable = true
+
   # CASED_RAISE_ON_ERRORS=1
   config.raise_on_errors = false
 
@@ -82,6 +91,8 @@ end
 ## Usage
 
 ### Cased CLI
+
+Keep any command line tool available as your team grows — monitor usage, require peer approvals for sensitive operations, and receive intelligent alerts to suspicious activity.
 
 #### Starting an approval workflow
 
