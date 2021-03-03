@@ -154,6 +154,32 @@ else
 end
 ```
 
+#### Starting an interactive approval workflow
+
+If you do not want to manually create sessions and handle each state manually,
+you can use the interactive approval workflow using
+[Cased::CLI::InteractiveSession](https://github.com/cased/cased-ruby/blob/3b0c8ebd37ba7deb83236be7dba4d52c74d7e4e5/lib/cased/cli/interactive_session.rb).
+
+```ruby
+Cased.configure do |config|
+  config.guard_application_key = 'guard_application_1pG43HF3aRHjNTTm10zzu0tngBO'
+end
+
+session = Cased::CLI::InteractiveSession.start
+
+if session.approved?
+  github.issues.each do |issue|
+    puts issue.title
+  end
+else
+  puts 'Unauthorized to export GitHub issues.'
+end
+```
+
+You no longer need to handle obtaining the user token or asking for a reason up
+front, `Cased::CLI::InteractiveSession` will prompt the user for any reason
+being required as necessary.
+
 ### Audit trails
 
 #### Publishing events to Cased
