@@ -31,7 +31,7 @@ module Cased
         subprocess_env[KEY] = TRUE
         subprocess_env.merge!(env)
         @writer = Cased::CLI::Asciinema::Writer.new(
-          command: command.join(' '),
+          command: command,
           width: width,
           height: height,
         )
