@@ -119,7 +119,7 @@ module Cased
       def initialize(reason: nil, command: nil, metadata: {}, authentication: nil)
         @authentication = authentication || Cased::CLI::Authentication.new
         @reason = reason
-        @command = command
+        @command = command || [$PROGRAM_NAME, *ARGV].join(' ')
         @metadata = metadata
         @requester = {}
         @responder = {}
@@ -202,10 +202,6 @@ module Cased
         return false unless recordable? && record_output?
 
         Cased::CLI::Log.log 'CLI session is now recording'
-
-        # It's not guaranteed we're in an interactive session so lazy load
-        # command unless specified.
-        @command ||= [$PROGRAM_NAME, *ARGV].join(' ')
 
         recorder = Cased::CLI::Recorder.new(command.split(' '), env: {
           'GUARD_SESSION_ID' => id,
