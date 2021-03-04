@@ -11,6 +11,7 @@ module Cased
 
         attr_accessor :width
         attr_accessor :height
+        attr_reader :command
         attr_reader :stream
         attr_reader :started_at
         attr_reader :finished_at
@@ -51,6 +52,7 @@ module Cased
             },
             'width' => width,
             'height' => height,
+            'command' => command.join(' '),
           }.tap do |h|
             if started_at
               h['timestamp'] = started_at.to_i

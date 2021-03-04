@@ -26,6 +26,19 @@ module Cased
     #    end
     attr_reader :http_read_timeout
 
+    # The Cased HTTP URL. Defaults to https://app.cased.com
+    #
+    # @example
+    #    CASED_URL="https://app.cased.com" rails server
+    #
+    # @example
+    #    Cased.configure do |config|
+    #      config.url = "https://app.cased.com"
+    #    end
+    #
+    # @return [String]
+    attr_accessor :url
+
     # The Cased HTTP API URL. Defaults to https://api.cased.com
     #
     # @example
@@ -62,7 +75,7 @@ module Cased
     #    Cased.configure do |config|
     #      config.guard_deny_if_unreachable = true
     #    end
-    attr_accessor :guard_deny_if_unreachable
+    attr_reader :guard_deny_if_unreachable
 
     # The URL to publish audit events to. Defaults to https://publish.cased.com
     #
@@ -140,11 +153,12 @@ module Cased
       @http_read_timeout = ENV.fetch('CASED_HTTP_READ_TIMEOUT', 10).to_i
       @http_open_timeout = ENV.fetch('CASED_HTTP_OPEN_TIMEOUT', 5).to_i
       @raise_on_errors = !ENV['CASED_RAISE_ON_ERRORS'].nil?
+      @url = ENV.fetch('CASED_URL', 'https://app.cased.com')
       @api_url = ENV.fetch('CASED_API_URL', 'https://api.cased.com')
       @publish_url = ENV.fetch('CASED_PUBLISH_URL', 'https://publish.cased.com')
       @guard_application_key = ENV['GUARD_APPLICATION_KEY']
       @guard_user_token = ENV['GUARD_USER_TOKEN']
-      @guard_deny_if_unreachable = parse_bool(ENV['DENY_IF_UNREACHABLE'])
+      self.guard_deny_if_unreachable = ENV['DENY_IF_UNREACHABLE']
       @publish_key = ENV['CASED_PUBLISH_KEY']
       @silence = !ENV['CASED_SILENCE'].nil?
       @policy_keys = Hash.new do |hash, key|
@@ -197,6 +211,10 @@ module Cased
 
     def silence?
       @silence || !ENV['CASED_SILENCE'].nil?
+    end
+
+    def guard_deny_if_unreachable=(value)
+      @guard_deny_if_unreachable = parse_bool(value)
     end
 
     def guard_deny_if_unreachable?

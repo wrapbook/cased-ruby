@@ -2,6 +2,7 @@
 
 require 'simplecov'
 SimpleCov.start do
+  add_filter %r{^/test/}
   add_filter 'lib/cased/extensions/hash/deep_merge.rb'
 end
 

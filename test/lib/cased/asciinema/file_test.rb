@@ -353,6 +353,15 @@ module Cased
 
           assert_equal cast, file.to_cast
         end
+
+        def test_from_writer
+          writer = Cased::CLI::Asciinema::Writer.new(command: ['irb'])
+          writer << 'hello'
+          file = Cased::CLI::Asciinema::File.from_writer(writer)
+
+          assert_equal writer.header, file.header
+          assert_equal writer.stream, file.stream
+        end
       end
     end
   end

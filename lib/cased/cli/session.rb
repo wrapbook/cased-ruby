@@ -22,9 +22,7 @@ module Cased
       # If we're inside of a recorded session we can lookup the session
       # we're in.
       def self.current
-        return @current if defined?(@current)
-
-        @current = if ENV['GUARD_SESSION_ID']
+        @current ||= if ENV['GUARD_SESSION_ID']
           Cased::CLI::Session.find(ENV['GUARD_SESSION_ID'])
         end
       end
@@ -121,7 +119,7 @@ module Cased
       def initialize(reason: nil, command: nil, metadata: {}, authentication: nil)
         @authentication = authentication || Cased::CLI::Authentication.new
         @reason = reason
-        @command = command
+        @command = command || [$PROGRAM_NAME, *ARGV].join(' ')
         @metadata = metadata
         @requester = {}
         @responder = {}
@@ -201,7 +199,7 @@ module Cased
       end
 
       def record
-        return unless recordable? && record_output?
+        return false unless recordable? && record_output?
 
         Cased::CLI::Log.log 'CLI session is now recording'
 

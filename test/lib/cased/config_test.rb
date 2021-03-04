@@ -66,6 +66,29 @@ module Cased
       assert_equal true, config.raise_on_errors?
     end
 
+    def test_default_url
+      config = Cased::Config.new
+
+      assert_equal 'https://app.cased.com', config.url
+    end
+
+    def test_configure_url
+      config = Cased::Config.new
+      config.url = 'https://app.staging.cased.com'
+
+      assert_equal 'https://app.staging.cased.com', config.url
+    end
+
+    def test_configure_url_with_environment_variable
+      original_url = ENV['CASED_URL']
+      ENV['CASED_URL'] = 'https://app.staging.cased.com'
+      config = Cased::Config.new
+
+      assert_equal 'https://app.staging.cased.com', config.url
+    ensure
+      ENV['CASED_URL'] = original_url
+    end
+
     def test_default_api_url
       config = Cased::Config.new
 
@@ -199,6 +222,94 @@ module Cased
       config.silence = true
 
       assert_predicate config, :silence?
+    end
+
+    def test_default_guard_application_key
+      config = Cased::Config.new
+
+      assert_nil config.guard_application_key
+    end
+
+    def test_configure_guard_application_key
+      config = Cased::Config.new
+      config.guard_application_key = 'guard_application_1pG43FixRaBrdiSkKBNiUOXQTaH'
+
+      assert_equal 'guard_application_1pG43FixRaBrdiSkKBNiUOXQTaH', config.guard_application_key
+    end
+
+    def test_configure_guard_application_key_with_environment_variable
+      original_guard_application_key = ENV['GUARD_APPLICATION_KEY']
+      ENV['GUARD_APPLICATION_KEY'] = 'guard_application_1pG43FixRaBrdiSkKBNiUOXQTaH'
+      config = Cased::Config.new
+
+      assert_equal 'guard_application_1pG43FixRaBrdiSkKBNiUOXQTaH', config.guard_application_key
+    ensure
+      ENV['GUARD_APPLICATION_KEY'] = original_guard_application_key
+    end
+
+    def test_default_guard_user_token
+      config = Cased::Config.new
+
+      assert_nil config.guard_user_token
+    end
+
+    def test_configure_guard_user_token
+      config = Cased::Config.new
+      config.guard_user_token = 'guard_application_1pG43FixRaBrdiSkKBNiUOXQTaH'
+
+      assert_equal 'guard_application_1pG43FixRaBrdiSkKBNiUOXQTaH', config.guard_user_token
+    end
+
+    def test_configure_guard_user_token_with_environment_variable
+      original_guard_user_token = ENV['GUARD_USER_TOKEN']
+      ENV['GUARD_USER_TOKEN'] = 'user_1pG43AiqJeErGnJxwDr4WgqFS9i'
+      config = Cased::Config.new
+
+      assert_equal 'user_1pG43AiqJeErGnJxwDr4WgqFS9i', config.guard_user_token
+    ensure
+      ENV['GUARD_USER_TOKEN'] = original_guard_user_token
+    end
+
+    def test_default_guard_deny_if_unreachable
+      config = Cased::Config.new
+
+      assert_equal false, config.guard_deny_if_unreachable
+      refute_predicate config, :guard_deny_if_unreachable?
+    end
+
+    def test_configure_guard_deny_if_unreachable
+      config = Cased::Config.new
+      config.guard_deny_if_unreachable = '1'
+
+      assert_equal true, config.guard_deny_if_unreachable
+      assert_predicate config, :guard_deny_if_unreachable?
+    end
+
+    def test_configure_guard_deny_if_unreachable_with_other_value_types
+      config = Cased::Config.new
+
+      %w[1 true t TRUE T].each do |value|
+        config.guard_deny_if_unreachable = value
+        assert_equal true, config.guard_deny_if_unreachable
+        assert_predicate config, :guard_deny_if_unreachable?
+      end
+
+      %w[0 false f FALSE F].each do |value|
+        config.guard_deny_if_unreachable = value
+        assert_equal false, config.guard_deny_if_unreachable
+        refute_predicate config, :guard_deny_if_unreachable?
+      end
+    end
+
+    def test_configure_guard_deny_if_unreachable_with_environment_variable
+      original_guard_user_token = ENV['DENY_IF_UNREACHABLE']
+      ENV['DENY_IF_UNREACHABLE'] = '1'
+      config = Cased::Config.new
+
+      assert_equal true, config.guard_deny_if_unreachable
+      assert_predicate config, :guard_deny_if_unreachable?
+    ensure
+      ENV['DENY_IF_UNREACHABLE'] = original_guard_user_token
     end
 
     def test_configure_silence_with_environment
