@@ -29,6 +29,8 @@ module Cased
       end
 
       def test_start
+        Subprocess.stubs(:check_output).with(%w[tput cols]).returns('80')
+        Subprocess.stubs(:check_output).with(%w[tput lines]).returns('24')
         Subprocess.stubs(:check_call).returns('80')
         recorder = Cased::CLI::Recorder.new(['irb'])
 
