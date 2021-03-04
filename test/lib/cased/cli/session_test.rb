@@ -8,8 +8,8 @@ module Cased
       include ActiveSupport::Testing::Assertions
 
       def stub_session(options = {})
-        stub_request(:get, "https://api.cased.com/cli/sessions/guard_session_1234?user_token=user_1234").
-          to_return(
+        stub_request(:get, 'https://api.cased.com/cli/sessions/guard_session_1234?user_token=user_1234')
+          .to_return(
             status: 200,
             body: {
               id: 'session_1234',
@@ -30,7 +30,7 @@ module Cased
             }.merge(options).to_json,
             headers: {
               'Content-Type' => 'application/json',
-            }
+            },
           )
       end
 
@@ -152,11 +152,11 @@ module Cased
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'
         stub_session(state: 'requested')
-        stub_request(:post, "https://api.cased.com/cli/sessions").
-          to_return(
+        stub_request(:post, 'https://api.cased.com/cli/sessions')
+          .to_return(
             status: 401,
             body: {
-              error: 'unauthorized'
+              error: 'unauthorized',
             }.to_json,
             headers: {
               'Content-Type' => 'application/json',
@@ -176,11 +176,11 @@ module Cased
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'
         stub_session(state: 'requested')
-        stub_request(:post, "https://api.cased.com/cli/sessions").
-          to_return(
+        stub_request(:post, 'https://api.cased.com/cli/sessions')
+          .to_return(
             status: 400,
             body: {
-              error: 'reason_required'
+              error: 'reason_required',
             }.to_json,
             headers: {
               'Content-Type' => 'application/json',
@@ -200,11 +200,11 @@ module Cased
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'
         stub_session(state: 'requested')
-        stub_request(:post, "https://api.cased.com/cli/sessions").
-          to_return(
+        stub_request(:post, 'https://api.cased.com/cli/sessions')
+          .to_return(
             status: 499,
             body: {
-              error: 'another'
+              error: 'another',
             }.to_json,
             headers: {
               'Content-Type' => 'application/json',
@@ -224,8 +224,8 @@ module Cased
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'
         stub_session(state: 'requested')
-        stub_request(:post, "https://api.cased.com/cli/sessions").
-          to_return(
+        stub_request(:post, 'https://api.cased.com/cli/sessions')
+          .to_return(
             status: 200,
             body: {
               id: 'session_1234',
@@ -315,8 +315,8 @@ module Cased
       def test_create
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'
-        stub_request(:post, "https://api.cased.com/cli/sessions").
-          to_return(
+        stub_request(:post, 'https://api.cased.com/cli/sessions')
+          .to_return(
             status: 200,
             body: {
               id: 'session_1234',
@@ -363,8 +363,8 @@ module Cased
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'
         stub_session(state: 'requested')
-        stub_request(:post, "https://api.cased.com/cli/sessions/guard_session_1234/cancel").
-          to_return(
+        stub_request(:post, 'https://api.cased.com/cli/sessions/guard_session_1234/cancel')
+          .to_return(
             status: 200,
             body: {
               id: 'session_1234',
@@ -408,8 +408,8 @@ module Cased
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'
         stub_session(state: 'requested')
-        stub_request(:post, "https://api.cased.com/cli/sessions/guard_session_1234/cancel").
-          to_return(
+        stub_request(:post, 'https://api.cased.com/cli/sessions/guard_session_1234/cancel')
+          .to_return(
             status: 200,
             body: {
               id: 'session_1234',
@@ -445,8 +445,8 @@ module Cased
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'
         stub_session(state: 'requested')
-        stub_request(:post, "https://api.cased.com/cli/sessions/guard_session_1234/cancel").
-          to_return(
+        stub_request(:post, 'https://api.cased.com/cli/sessions/guard_session_1234/cancel')
+          .to_return(
             status: 200,
             body: {
               id: 'session_1234',
