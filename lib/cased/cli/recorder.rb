@@ -6,6 +6,7 @@ module Cased
   module CLI
     class Recorder
       KEY = 'CASED_CLI_RECORDING'
+      TRUE = '1'
 
       attr_reader :command
       attr_reader :events
@@ -17,7 +18,7 @@ module Cased
 
       # @return [Boolean] if CLI session is being recorded.
       def self.recording?
-        ENV[KEY] == '1'
+        ENV[KEY] == TRUE
       end
 
       def initialize(command, env: {})
@@ -27,7 +28,7 @@ module Cased
         @height = Subprocess.check_output(%w[tput lines]).strip.to_i
 
         subprocess_env = ENV.to_h.dup
-        subprocess_env[KEY] = '1'
+        subprocess_env[KEY] = TRUE
         subprocess_env.merge!(env)
         @writer = Cased::CLI::Asciinema::Writer.new(
           command: command.join(' '),

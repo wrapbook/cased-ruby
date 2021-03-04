@@ -22,9 +22,7 @@ module Cased
       # If we're inside of a recorded session we can lookup the session
       # we're in.
       def self.current
-        return @current if defined?(@current)
-
-        @current = if ENV['GUARD_SESSION_ID']
+        @current ||= if ENV['GUARD_SESSION_ID']
           Cased::CLI::Session.find(ENV['GUARD_SESSION_ID'])
         end
       end
@@ -201,9 +199,13 @@ module Cased
       end
 
       def record
-        return unless recordable? && record_output?
+        return false unless recordable? && record_output?
 
         Cased::CLI::Log.log 'CLI session is now recording'
+
+        # It's not guaranteed we're in an interactive session so lazy load
+        # command unless specified.
+        @command ||= [$PROGRAM_NAME, *ARGV].join(' ')
 
         recorder = Cased::CLI::Recorder.new(command.split(' '), env: {
           'GUARD_SESSION_ID' => id,
