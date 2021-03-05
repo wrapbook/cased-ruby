@@ -57,7 +57,7 @@ module Cased
 
       def reason_prompt
         print Cased::CLI::Log.string 'Please enter a reason for access: '
-        session.reason = gets.chomp
+        session.reason = STDIN.gets.chomp
       end
 
       def wait_for_approval
