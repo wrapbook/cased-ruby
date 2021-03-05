@@ -68,12 +68,6 @@ module Cased
       # @return [String, nil]
       attr_reader :state
 
-      # Public: Command that invoked CLI session.
-      # @example
-      #   session.command #=> "/usr/local/bin/rails console"
-      # @return [String]
-      attr_accessor :command
-
       # Public: Additional user supplied metadata about the CLI session.
       # @example
       #   session.metadata #=> {"hostname" => "Mac.local"}
@@ -119,11 +113,33 @@ module Cased
       def initialize(reason: nil, command: nil, metadata: {}, authentication: nil)
         @authentication = authentication || Cased::CLI::Authentication.new
         @reason = reason
-        @command = command || [$PROGRAM_NAME, *ARGV].join(' ')
+        @command = command
         @metadata = metadata
         @requester = {}
         @responder = {}
         @guard_application = {}
+      end
+
+      # Public: Command that invoked CLI session.
+      # @example
+      #   session.command #=> "/usr/local/bin/rails console"
+      # @return [String]
+      def command
+        @command ||= begin
+          parts = [$PROGRAM_NAME]
+          # If we're running rails db:migrate ARGV will be empty, but the
+          # task being performed will be available in Rake.
+          #
+          # If we're running rake db:migrate, both ARGV and Rake will have the
+          # same information about the program arguments and we can rely just on
+          # ARGV.
+          parts << if ARGV.empty? && defined?(Rake)
+            Rake.application.top_level_tasks
+          else
+            ARGV
+          end
+          parts.flatten.join(' ')
+        end
       end
 
       def to_s
