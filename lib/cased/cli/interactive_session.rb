@@ -30,6 +30,18 @@ module Cased
       end
 
       def create
+        signal_handler = Signal.trap('SIGINT') do
+          if session.requested?
+            Cased::CLI::Log.log 'Exiting and canceling request…'
+            session.cancel
+            exit 0
+          else
+            # We need to call the original handler if we exit this interactive
+            # session successfully
+            signal_handler.call if signal_handler.respond_to?(:call)
+          end
+        end
+
         if session.create
           handle_state(session.state)
         elsif session.unauthorized?
