@@ -244,7 +244,7 @@ module Cased
 
       def cancel
         response = Cased.clients.cli.post("#{api_url}/cancel", user_token: authentication.token)
-        self.session = response.body if response.success?
+        self.session = response.body
 
         canceled?
       end
