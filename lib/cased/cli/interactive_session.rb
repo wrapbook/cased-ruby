@@ -83,6 +83,7 @@ module Cased
           wait_for_approval
         when 'denied'
           Cased::CLI::Log.log 'CLI session has been denied'
+          exit 1
         when 'timed_out'
           Cased::CLI::Log.log 'CLI session has timed out'
         when 'canceled'
