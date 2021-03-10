@@ -61,6 +61,7 @@ module Cased
       end
 
       def wait_for_approval
+        sleep 1
         session.refresh && handle_state(session.state)
       end
 
