@@ -35,10 +35,12 @@ module Cased
             Cased::CLI::Log.log 'Exiting and canceling request…'
             session.cancel
             exit 0
-          else
+          elsif signal_handler.respond_to?(:call)
             # We need to call the original handler if we exit this interactive
             # session successfully
-            signal_handler.call if signal_handler.respond_to?(:call)
+            signal_handler.call
+          else
+            raise Interrupt
           end
         end
 
@@ -79,6 +81,7 @@ module Cased
 
       def waiting_for_approval_message
         return if defined?(@waiting_for_approval_message_displayed)
+
         motd = session.guard_application.dig('settings', 'message_of_the_day')
         waiting_message = motd.blank? ? 'Approval request sent…' : motd
         Cased::CLI::Log.log "#{waiting_message} (id: #{session.id})"
