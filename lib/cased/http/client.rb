@@ -20,8 +20,6 @@ module Cased
 
           conn.options.timeout = Cased.config.http_read_timeout
           conn.options.open_timeout = Cased.config.http_open_timeout
-
-          conn.adapter :net_http_persistent
         end
       end
 
