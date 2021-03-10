@@ -64,12 +64,21 @@ module Cased
         session.refresh && handle_state(session.state)
       end
 
+      def waiting_for_approval_message
+        return if defined?(@waiting_for_approval_message_displayed)
+        motd = session.guard_application.dig('settings', 'message_of_the_day')
+        waiting_message = motd.blank? ? 'Approval request sent…' : motd
+        Cased::CLI::Log.log "#{waiting_message} (id: #{session.id})"
+        @waiting_for_approval_message_displayed = true
+      end
+
       def handle_state(state)
         case state
         when 'approved'
           Cased::CLI::Log.log 'CLI session has been approved'
           session.record
         when 'requested'
+          waiting_for_approval_message
           wait_for_approval
         when 'denied'
           Cased::CLI::Log.log 'CLI session has been denied'
