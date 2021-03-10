@@ -175,7 +175,7 @@ module Cased
         return false unless api_url
 
         response = Cased.clients.cli.get(api_url, user_token: authentication.token)
-        self.session = response.body if response.success?
+        self.session = response.body
       end
 
       def error?
