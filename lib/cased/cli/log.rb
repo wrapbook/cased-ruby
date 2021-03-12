@@ -13,6 +13,8 @@ module Cased
 
       def self.log(text)
         puts string(text)
+      ensure
+        STDOUT.flush
       end
 
       def self.color(text, color, bold = false)

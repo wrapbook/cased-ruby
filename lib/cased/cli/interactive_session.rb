@@ -30,6 +30,20 @@ module Cased
       end
 
       def create
+        signal_handler = Signal.trap('SIGINT') do
+          if session.requested?
+            Cased::CLI::Log.log 'Exiting and canceling request…'
+            session.cancel
+            exit 0
+          elsif signal_handler.respond_to?(:call)
+            # We need to call the original handler if we exit this interactive
+            # session successfully
+            signal_handler.call
+          else
+            raise Interrupt
+          end
+        end
+
         if session.create
           handle_state(session.state)
         elsif session.unauthorized?
@@ -61,7 +75,17 @@ module Cased
       end
 
       def wait_for_approval
+        sleep 1
         session.refresh && handle_state(session.state)
+      end
+
+      def waiting_for_approval_message
+        return if defined?(@waiting_for_approval_message_displayed)
+
+        motd = session.guard_application.dig('settings', 'message_of_the_day')
+        waiting_message = motd.blank? ? 'Approval request sent…' : motd
+        Cased::CLI::Log.log "#{waiting_message} (id: #{session.id})"
+        @waiting_for_approval_message_displayed = true
       end
 
       def handle_state(state)
@@ -70,9 +94,11 @@ module Cased
           Cased::CLI::Log.log 'CLI session has been approved'
           session.record
         when 'requested'
+          waiting_for_approval_message
           wait_for_approval
         when 'denied'
           Cased::CLI::Log.log 'CLI session has been denied'
+          exit 1
         when 'timed_out'
           Cased::CLI::Log.log 'CLI session has timed out'
         when 'canceled'
