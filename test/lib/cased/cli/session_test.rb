@@ -172,6 +172,30 @@ module Cased
         Cased.config.guard_user_token = old_guard_user_token
       end
 
+      def test_error_reauthenticate
+        old_guard_user_token = Cased.config.guard_user_token
+        Cased.config.guard_user_token = 'user_1234'
+        stub_session(state: 'requested')
+        stub_request(:post, 'https://api.cased.com/cli/sessions')
+          .to_return(
+            status: 401,
+            body: {
+              error: 'reauthenticate',
+            }.to_json,
+            headers: {
+              'Content-Type' => 'application/json',
+            },
+          )
+
+        session = Cased::CLI::Session.new
+
+        refute session.create
+        assert_predicate session, :reauthenticate?
+        assert_predicate session, :error?
+      ensure
+        Cased.config.guard_user_token = old_guard_user_token
+      end
+
       def test_error_reason_required
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'

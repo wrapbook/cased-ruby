@@ -194,6 +194,10 @@ module Cased
         error == :unauthorized
       end
 
+      def reauthenticate?
+        error == :reauthenticate
+      end
+
       def record_output?
         guard_application.dig('settings', 'record_output') || false
       end
@@ -233,6 +237,8 @@ module Cased
             @error = :reason_required
           when 'unauthorized'
             @error = :unauthorized
+          when 'reauthenticate'
+            @error = :reauthenticate
           else
             @error = true
             return false
