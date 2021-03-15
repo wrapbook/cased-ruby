@@ -46,6 +46,13 @@ module Cased
 
         if session.create
           handle_state(session.state)
+        elsif session.reauthenticate?
+          Cased::CLI::Log.log "You must re-authenticate with Cased due to recent changes to this application's settings."
+
+          identity = Cased::CLI::Identity.new
+          session.authentication.token = identity.identify
+
+          create
         elsif session.unauthorized?
           if session.authentication.exists?
             Cased::CLI::Log.log "Existing credentials at #{session.authentication.credentials_path} are not valid."
