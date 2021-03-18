@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    cased-ruby (0.4.3)
+    cased-ruby (0.4.4)
       activesupport (~> 6)
       dotpath (= 0.1.0)
       faraday (~> 1.0)
