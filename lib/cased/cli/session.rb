@@ -86,9 +86,17 @@ module Cased
       # @return [String, nil]
       attr_accessor :reason
 
+      # Public: The forwarded IP V4 or IP V6 address of the user that initiated
+      # the CLI session.
+      #
+      # @example
+      #   session.forwarded_ip_address #=> "1.1.1.1"
+      # @return [String, nil]
+      attr_reader :forwarded_ip_address
+
       # Public: The client's IP V4 or IP V6 address that initiated the CLI session.
       # @example
-      #   session.reason #=> "1.1.1.1"
+      #   session.ip_address #=> "1.1.1.1"
       # @return [String, nil]
       attr_reader :ip_address
 
@@ -144,6 +152,7 @@ module Cased
         @command = session.fetch('command')
         @metadata = session.fetch('metadata')
         @reason = session.fetch('reason')
+        @forwarded_ip_address = session.fetch('forwarded_ip_address')
         @ip_address = session.fetch('ip_address')
         @requester = session.fetch('requester')
         @responded_at = session['responded_at']
@@ -226,6 +235,7 @@ module Cased
 
         response = Cased.clients.cli.post('cli/sessions',
           user_token: authentication.token,
+          forwarded_ip_address: forwarded_ip_address,
           reason: reason,
           metadata: metadata,
           command: command)

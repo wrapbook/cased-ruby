@@ -50,7 +50,9 @@ module Cased
           Cased::CLI::Log.log "You must re-authenticate with Cased due to recent changes to this application's settings."
 
           identity = Cased::CLI::Identity.new
-          session.authentication.token = identity.identify
+          token, ip_address = identity.identify
+          session.authentication.token = token
+          session.forwarded_ip_address = ip_address
 
           create
         elsif session.unauthorized?
@@ -61,7 +63,9 @@ module Cased
           end
 
           identity = Cased::CLI::Identity.new
-          session.authentication.token = identity.identify
+          token, ip_address = identity.identify
+          session.authentication.token = token
+          session.forwarded_ip_address = ip_address
 
           create
         elsif session.reason_required?

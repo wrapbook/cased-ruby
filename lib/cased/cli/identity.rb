@@ -23,15 +23,17 @@ module Cased
       def poll(poll_url)
         count = 0
         user_id = nil
+        ip_address = nil
 
         while user_id.nil?
           count += 1
           response = Cased.clients.cli.get(poll_url)
           user_id = response.body.dig('user', 'id')
+          ip_address = response.body.fetch('ip_address')
           sleep 1 if user_id.nil?
         end
 
-        user_id
+        [user_id, ip_address]
       end
     end
   end
