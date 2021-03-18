@@ -92,7 +92,7 @@ module Cased
       # @example
       #   session.forwarded_ip_address #=> "1.1.1.1"
       # @return [String, nil]
-      attr_reader :forwarded_ip_address
+      attr_accessor :forwarded_ip_address
 
       # Public: The client's IP V4 or IP V6 address that initiated the CLI session.
       # @example
