@@ -24,6 +24,7 @@ module Cased
           .to_return(
             status: 200,
             body: {
+              ip_address: '127.0.0.1',
               user: {
                 id: 'user_1234',
               },
@@ -34,8 +35,10 @@ module Cased
           )
 
         identify = Cased::CLI::Identity.new
+        token, ip_address = identify.identify
 
-        assert_equal 'user_1234', identify.identify
+        assert_equal 'user_1234', token
+        assert_equal '127.0.0.1', ip_address
       end
 
       def test_identify_is_unauthorized

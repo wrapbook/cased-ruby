@@ -18,7 +18,8 @@ module Cased
               url: 'https://app.cased.com/cli/sessions/guard_session_1234',
               state: 'requested',
               reason: '',
-              ip_address: '127.0.0.1',
+              ip_address: '1.1.1.1',
+              forwarded_ip_address: '127.0.0.1',
               command: 'irb',
               metadata: {},
               requester: {
@@ -258,7 +259,8 @@ module Cased
               url: 'https://app.cased.com/cli/sessions/guard_session_1234',
               state: 'requested',
               reason: '',
-              ip_address: '127.0.0.1',
+              ip_address: '1.1.1.1',
+              forwarded_ip_address: '127.0.0.1',
               command: 'irb',
               metadata: {},
               requester: {
@@ -349,7 +351,8 @@ module Cased
               url: 'https://app.cased.com/cli/sessions/guard_session_1234',
               state: 'requested',
               reason: 'My reason',
-              ip_address: '127.0.0.1',
+              ip_address: '1.1.1.1',
+              forwarded_ip_address: '127.0.0.1',
               command: 'irb',
               metadata: {
                 user_agent: 'iPhone',
@@ -374,7 +377,8 @@ module Cased
         assert_equal 'https://app.cased.com/cli/sessions/guard_session_1234', session.url
         assert_equal 'requested', session.state
         assert_equal 'My reason', session.reason
-        assert_equal '127.0.0.1', session.ip_address
+        assert_equal '1.1.1.1', session.ip_address
+        assert_equal '127.0.0.1', session.forwarded_ip_address
         assert_equal 'irb', session.command
         assert_equal 'iPhone', session.metadata['user_agent']
         assert_equal 'user_1234', session.requester['id']
@@ -397,7 +401,8 @@ module Cased
               url: 'https://app.cased.com/cli/sessions/guard_session_1234',
               state: 'canceled',
               reason: 'My reason',
-              ip_address: '127.0.0.1',
+              ip_address: '1.1.1.1',
+              forwarded_ip_address: '127.0.0.1',
               command: 'irb',
               metadata: {
                 user_agent: 'iPhone',
@@ -442,7 +447,8 @@ module Cased
               url: 'https://app.cased.com/cli/sessions/guard_session_1234',
               state: 'canceled',
               reason: 'My reason',
-              ip_address: '127.0.0.1',
+              ip_address: '1.1.1.1',
+              forwarded_ip_address: '127.0.0.1',
               command: 'irb',
               metadata: {
                 user_agent: 'iPhone',
@@ -479,7 +485,8 @@ module Cased
               url: 'https://app.cased.com/cli/sessions/guard_session_1234',
               state: 'canceled',
               reason: 'My reason',
-              ip_address: '127.0.0.1',
+              ip_address: '1.1.1.1',
+              forwarded_ip_address: '127.0.0.1',
               command: 'irb',
               metadata: {
                 user_agent: 'iPhone',

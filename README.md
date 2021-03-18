@@ -135,7 +135,8 @@ end
 
 authentication = Cased::CLI::Authentication.new
 identity = Cased::CLI::Identity.new
-authentication.token = identity.identify
+token, ip_address = identity.identify
+authentication.token = token
 
 session = Cased::CLI::Session.new(
   authentication: authentication,
