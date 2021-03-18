@@ -28,9 +28,12 @@ module Cased
         while user_id.nil?
           count += 1
           response = Cased.clients.cli.get(poll_url)
-          user_id = response.body.dig('user', 'id')
-          ip_address = response.body.fetch('ip_address')
-          sleep 1 if user_id.nil?
+          if response.success?
+            user_id = response.body.dig('user', 'id')
+            ip_address = response.body.fetch('ip_address')
+          else
+            sleep 1
+          end
         end
 
         [user_id, ip_address]
