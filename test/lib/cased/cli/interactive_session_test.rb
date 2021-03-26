@@ -70,10 +70,10 @@ module Cased
         begin
           Cased::CLI::InteractiveSession.start
           assert false, 'did not expect this to be reached'
-        rescue SystemExit => error
+        rescue SystemExit => e
           assert true
-          assert_equal 1, error.status
-          assert_not error.success?
+          assert_equal 1, e.status
+          assert_not e.success?
         end
       ensure
         Cased.config.guard_user_token = old_guard_user_token
