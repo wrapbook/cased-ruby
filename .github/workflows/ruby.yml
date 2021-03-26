@@ -28,19 +28,3 @@ jobs:
       - name: Run Tests
         run: |
           bundle exec rake test
-
-      - name: Generate yard documentation
-        run: |
-          bundle exec yard
-
-      - name: Upload test coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage
-          path: coverage/**/*
-
-      - name: Upload generated yard documentation
-        uses: actions/upload-artifact@v2
-        with:
-          name: yard
-          path: doc/**/*
