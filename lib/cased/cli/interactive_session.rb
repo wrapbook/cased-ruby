@@ -112,8 +112,10 @@ module Cased
           exit 1
         when 'timed_out'
           Cased::CLI::Log.log 'CLI session has timed out'
+          exit 1
         when 'canceled'
           Cased::CLI::Log.log 'CLI session has been canceled'
+          exit 0
         end
       end
     end
