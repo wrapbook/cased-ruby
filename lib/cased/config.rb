@@ -172,6 +172,7 @@ module Cased
           hash[normalized_key] = api_key if api_key
         end
       end
+      @cli = Cased::CLI::Config.new
     end
 
     # Policy keys are used to query for events from audit trails.

@@ -15,6 +15,6 @@ module Cased
       def initialize
         @metadata = {}
       end
-     end
+    end
   end
 end
