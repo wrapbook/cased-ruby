@@ -119,15 +119,6 @@ module Cased
     #    end
     attr_reader :policy_keys
 
-    # @example
-    #   Cased.configure do |config|
-    #     config.cli.metadata = {
-    #       heroku_application: ENV['HEROKU_APP_NAME'],
-    #       git_commit: ENV['HEROKU_SLUG_COMMIT'],
-    #     }
-    #   end
-    attr_reader :cli
-
     # Policy keys are used to query for events from audit trails.
     #
     # @example
@@ -181,7 +172,6 @@ module Cased
           hash[normalized_key] = api_key if api_key
         end
       end
-      @cli = { metadata: ENV.fetch('CASED_CLI_METADATA', {}) }
     end
 
     # Policy keys are used to query for events from audit trails.
