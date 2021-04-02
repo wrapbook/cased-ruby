@@ -321,5 +321,24 @@ module Cased
     ensure
       ENV['CASED_SILENCE'] = original_silence
     end
+
+    def test_default_metadata
+      config = Cased::Config.new
+      metadata = {}
+      assert_equal metadata, config.cli[:metadata]
+    end
+
+    def test_configure_metadata
+      ENV['HEROKU_APP_NAME'] = 'my app'
+      ENV['CASED_CLI_METADATA'] = {
+        heroku_application: ENV['HEROKU_APP_NAME'],
+      }.to_s
+
+      metadata = ENV['CASED_CLI_METADATA']
+
+      config = Cased::Config.new
+      config.cli[:metadata] = metadata
+      assert_equal metadata, config.cli[:metadata]
+    end
   end
 end

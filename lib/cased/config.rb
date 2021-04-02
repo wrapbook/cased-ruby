@@ -119,18 +119,14 @@ module Cased
     #    end
     attr_reader :policy_keys
 
-    #
     # @example
-    #    APP_NAME="my-first-app" \
-    #
-    #
-    # @example
-    #    Cased.configure do |config|
-    #      config.cli.metadata = {
-    #        app_name: "my-first-app",
-    #      }
-    #    end
-    attr_reader :metadata
+    #   Cased.configure do |config|
+    #     config.cli.metadata = {
+    #       heroku_application: ENV['HEROKU_APP_NAME'],
+    #       git_commit: ENV['HEROKU_SLUG_COMMIT'],
+    #     }
+    #   end
+    attr_reader :cli
 
     # Policy keys are used to query for events from audit trails.
     #
@@ -185,12 +181,7 @@ module Cased
           hash[normalized_key] = api_key if api_key
         end
       end
-      @metadata = Hash.new do |hash, key|
-        normalized_key = key.to_sym
-        env_metadata_name = key.to_s.tr(' ', '_').tr('-', '_').upcase
-        env_metadata_key = ENV["CASED_METADATA_#{env_metadata_name}"]
-        hash[normalized_key] = api_key if api_key
-      end
+      @cli = { metadata: ENV.fetch('CASED_CLI_METADATA', {}) }
     end
 
     # Policy keys are used to query for events from audit trails.
@@ -238,10 +229,6 @@ module Cased
 
     def guard_deny_if_unreachable?
       @guard_deny_if_unreachable
-    end
-
-    def metadata
-      @metadata
     end
 
     private
