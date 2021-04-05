@@ -229,3 +229,5 @@ module Cased
     end
   end
 end
+
+require 'cased/cli/config'
