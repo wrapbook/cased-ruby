@@ -128,7 +128,7 @@ module Cased
         @authentication = authentication || Cased::CLI::Authentication.new
         @reason = reason
         @command = command || [$PROGRAM_NAME, *ARGV].join(' ')
-        @metadata = metadata
+        @metadata = metadata.merge(Cased::CLI::Config.new.metadata)
         @requester = {}
         @responder = {}
         @guard_application = {}
