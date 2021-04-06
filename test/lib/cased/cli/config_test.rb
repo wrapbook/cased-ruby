@@ -19,7 +19,7 @@ module Cased
         metadata = {
           heroku_application: 'my app',
         }
-        config.metadata[:heroku_application] = 'my app'
+        config.metadata = metadata
 
         assert_equal metadata, config.metadata
       end

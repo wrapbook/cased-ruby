@@ -10,7 +10,7 @@ module Cased
       #       git_commit: ENV['HEROKU_SLUG_COMMIT'],
       #     }
       #   end
-      attr_reader :metadata
+      attr_accessor :metadata
 
       def initialize
         @metadata = {}
