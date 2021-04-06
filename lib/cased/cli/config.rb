@@ -2,7 +2,7 @@
 
 module Cased
   module CLI
-    class Config < Cased::Config
+    class Config
       # @example
       #   Cased.configure do |config|
       #     config.cli.metadata = {
