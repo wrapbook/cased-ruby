@@ -25,7 +25,7 @@ module Cased
         @session = Cased::CLI::Session.new(
           reason: reason,
           command: command,
-          metadata: metadata.merge(Cased.config.cli.metadata),
+          metadata: metadata,
         )
       end
 

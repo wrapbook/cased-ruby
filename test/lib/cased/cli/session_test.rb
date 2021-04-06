@@ -529,46 +529,12 @@ module Cased
         ENV['GUARD_SESSION_ID'] = old_guard_session_id
       end
 
-      def test_create_with_global_config
-        old_guard_user_token = Cased.config.guard_user_token
-        Cased.config.guard_user_token = 'user_1234'
-
-        Cased.config.cli.metadata = { application: 'my_app' }
-
-        stub_request(:post, 'https://api.cased.com/cli/sessions')
-          .to_return(
-            status: 200,
-            body: {
-              id: 'session_1234',
-              api_url: 'https://api.cased.com/cli/sessions/guard_session_1234',
-              api_record_url: 'https://api.cased.com/cli/sessions/guard_session_1234/record',
-              url: 'https://app.cased.com/cli/sessions/guard_session_1234',
-              state: 'requested',
-              reason: 'My reason',
-              ip_address: '1.1.1.1',
-              forwarded_ip_address: '127.0.0.1',
-              command: 'irb',
-              metadata: {
-                user_agent: 'iPhone',
-              },
-              requester: {
-                id: 'user_1234',
-              },
-              guard_application: {
-                id: 'guard_application_1234',
-              },
-            }.to_json,
-            headers: {
-              'Content-Type' => 'application/json',
-            },
-          )
+      def test_new_with_global_config
+        metadata = { application: 'my_app' }
+        Cased.config.cli.metadata = metadata
         session = Cased::CLI::Session.new
 
-        assert session.create
-        assert_equal 'my_app', session.metadata['application']
-        assert_equal 'iPhone', session.metadata['user_agent']
-      ensure
-        Cased.config.guard_user_token = old_guard_user_token
+        assert_equal metadata, session.metadata
       end
     end
   end
