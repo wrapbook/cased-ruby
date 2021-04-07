@@ -15,7 +15,6 @@ module Cased
       end
 
       def test_configure_metadata
-        original_config_metadata = Cased.config.cli.metadata
         config = Cased::CLI::Config.new
         metadata = {
           heroku_application: 'my app',
@@ -23,8 +22,6 @@ module Cased
         config.metadata = metadata
 
         assert_equal metadata, config.metadata
-      ensure
-        Cased.config.cli.metadata = original_config_metadata
       end
     end
   end
