@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'cased/cli/config'
+
 module Cased
   class Config
     # The amount of time in seconds to allow the HTTP client to open a
@@ -149,6 +151,15 @@ module Cased
     #   end
     attr_writer :silence
 
+    # @example
+    #   Cased.configure do |config|
+    #     config.cli.metadata = {
+    #       heroku_application: ENV['HEROKU_APP_NAME'],
+    #       git_commit: ENV['HEROKU_SLUG_COMMIT'],
+    #     }
+    #   end
+    attr_reader :cli
+
     def initialize
       @http_read_timeout = ENV.fetch('CASED_HTTP_READ_TIMEOUT', 10).to_i
       @http_open_timeout = ENV.fetch('CASED_HTTP_OPEN_TIMEOUT', 5).to_i
@@ -172,6 +183,7 @@ module Cased
           hash[normalized_key] = api_key if api_key
         end
       end
+      @cli = Cased::CLI::Config.new
     end
 
     # Policy keys are used to query for events from audit trails.

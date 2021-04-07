@@ -528,6 +528,17 @@ module Cased
         Cased.config.guard_user_token = old_guard_user_token
         ENV['GUARD_SESSION_ID'] = old_guard_session_id
       end
+
+      def test_new_with_global_config
+        original_cli_metadata = Cased.config.cli.metadata
+        metadata = { application: 'my_app' }
+        Cased.config.cli.metadata = metadata
+        session = Cased::CLI::Session.new
+
+        assert_equal metadata, session.metadata
+      ensure
+        Cased.config.cli.metadata = original_cli_metadata
+      end
     end
   end
 end

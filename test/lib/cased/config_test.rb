@@ -321,5 +321,17 @@ module Cased
     ensure
       ENV['CASED_SILENCE'] = original_silence
     end
+
+    def test_configure_cli
+      config = Cased::Config.new
+      cli = {
+        metadata: {
+          application: 'my_app',
+        },
+      }
+      config.cli.metadata = { application: 'my_app' }
+
+      assert_equal cli[:metadata], config.cli.metadata
+    end
   end
 end
