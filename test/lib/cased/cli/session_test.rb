@@ -539,6 +539,21 @@ module Cased
       ensure
         Cased.config.cli.metadata = original_cli_metadata
       end
+
+      def test_metadata_specified_in_initializer_overrides_global
+        original_cli_metadata = Cased.config.cli.metadata
+        metadata = {
+          application: 'override',
+        }
+        Cased.config.cli.metadata = {
+          application: 'global',
+        }
+        session = Cased::CLI::Session.new(metadata: metadata)
+
+        assert_equal metadata, session.metadata
+      ensure
+        Cased.config.cli.metadata = original_cli_metadata
+      end
     end
   end
 end
