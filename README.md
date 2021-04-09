@@ -90,7 +90,8 @@ Cased.configure do |config|
   # Attach metadata to all CLI requests. This metadata will appear in Cased and
   # any notification source such as email or Slack.
   #
-  # You are limited to 20 properties and cannot be a nested dictionary.
+  # You are limited to 20 properties and cannot be a nested dictionary. Metadata
+  # specified in the CLI request overrides any configured globally.
   config.cli.metadata = {
     rails_env: ENV['RAILS_ENV'],
     heroku_application: ENV['HEROKU_APP_NAME'],
@@ -210,6 +211,8 @@ Cased.configure do |config|
   }
 end
 ```
+
+Note: Metadata specified in the CLI request overrides any configured globally.
 
 ### Audit trails
 
