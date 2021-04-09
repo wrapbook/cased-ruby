@@ -6,8 +6,9 @@ module Cased
       # @example
       #   Cased.configure do |config|
       #     config.cli.metadata = {
+      #       rails_env: ENV['RAILS_ENV'],
       #       heroku_application: ENV['HEROKU_APP_NAME'],
-      #       git_commit: ENV['HEROKU_SLUG_COMMIT'],
+      #       git_commit: ENV['GIT_COMMIT'],
       #     }
       #   end
       attr_accessor :metadata

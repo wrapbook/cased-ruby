@@ -9,6 +9,7 @@ A Cased client for Ruby applications in your organization to control and monitor
 - [Usage](#usage)
   - [Cased CLI](#cased-cli)
     - [Starting an approval workflow](#starting-an-approval-workflow)
+    - [Attaching metadata to all CLI requests](#attaching-metadata-to-all-cli-requests)
   - [Audit trails](#audit-trails)
     - [Publishing events to Cased](#publishing-events-to-cased)
     - [Retrieving events from a Cased audit trail](#retrieving-events-from-a-cased-audit-trail)
@@ -85,6 +86,16 @@ Cased.configure do |config|
 
   # CASED_HTTP_READ_TIMEOUT=10
   config.http_read_timeout = 10
+
+  # Attach metadata to all CLI requests. This metadata will appear in Cased and
+  # any notification source such as email or Slack.
+  #
+  # You are limited to 20 properties and cannot be a nested dictionary.
+  config.cli.metadata = {
+    rails_env: ENV['RAILS_ENV'],
+    heroku_application: ENV['HEROKU_APP_NAME'],
+    git_commit: ENV['GIT_COMMIT'],
+  }
 end
 ```
 
@@ -180,6 +191,25 @@ end
 You no longer need to handle obtaining the user token or asking for a reason up
 front, `Cased::CLI::InteractiveSession` will prompt the user for any reason
 being required as necessary.
+
+#### Attaching metadata to all CLI requests
+
+While you can customize the metadata included for each CLI request, it may prove
+useful to specify metadata globally that will be included with each CLI request.
+Some useful information to include may be the current Rails environment, Heroku
+application, Git commit deployed, and more.
+
+Metadata is limited to 20 properties and cannot be a nested dictionary.
+
+```ruby
+Cased.configure do |config|
+  config.cli.metadata = {
+    rails_env: ENV['RAILS_ENV'],
+    heroku_application: ENV['HEROKU_APP_NAME'],
+    git_commit: ENV['GIT_COMMIT'],
+  }
+end
+```
 
 ### Audit trails
 
