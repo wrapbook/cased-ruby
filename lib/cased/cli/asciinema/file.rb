@@ -15,12 +15,17 @@ module Cased
         end
 
         def self.from_cast(cast)
+          return if cast.blank?
+
           stream = cast.split("\n").collect do |data|
             JSON.parse(data)
           end
           header = stream.shift
+          return unless header.is_a?(Hash)
 
           new(header, stream)
+        rescue JSON::ParserError
+          nil
         end
 
         # Required

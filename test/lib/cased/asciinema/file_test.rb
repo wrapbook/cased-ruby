@@ -354,6 +354,19 @@ module Cased
           assert_equal cast, file.to_cast
         end
 
+        def test_from_cast_blank
+          assert_nil Cased::CLI::Asciinema::File.from_cast(nil)
+          assert_nil Cased::CLI::Asciinema::File.from_cast('')
+        end
+
+        def test_from_cast_with_invalid_json
+          assert_nil Cased::CLI::Asciinema::File.from_cast('not json')
+        end
+
+        def test_from_cast_with_invalid_header
+          assert_nil Cased::CLI::Asciinema::File.from_cast('[0.0, "o", "not a header"]')
+        end
+
         def test_from_writer
           writer = Cased::CLI::Asciinema::Writer.new(command: ['irb'])
           writer << 'hello'
