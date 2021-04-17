@@ -65,6 +65,48 @@ module Cased
         Cased.config.guard_user_token = old_guard_user_token
       end
 
+      def test_original_command
+        old_guard_user_token = Cased.config.guard_user_token
+        Cased.config.guard_user_token = 'user_1234'
+        stub_request(:post, 'https://api.cased.com/cli/sessions')
+          .to_return(
+            status: 200,
+            body: {
+              id: 'session_1234',
+              api_url: 'https://api.cased.com/cli/sessions/guard_session_1234',
+              api_record_url: 'https://api.cased.com/cli/sessions/guard_session_1234/record',
+              url: 'https://app.cased.com/cli/sessions/guard_session_1234',
+              state: 'requested',
+              reason: '',
+              ip_address: '1.1.1.1',
+              forwarded_ip_address: '127.0.0.1',
+              command: '/Users/[USERNAME]/ruby',
+              metadata: {},
+              requester: {
+                id: 'user_1234',
+              },
+              guard_application: {
+                id: 'guard_application_1234',
+              },
+            }.to_json,
+            headers: {
+              'Content-Type' => 'application/json',
+            },
+          )
+
+        session = Cased::CLI::Session.new(command: '/Users/cased/ruby')
+
+        assert_equal '/Users/cased/ruby', session.original_command
+        assert_equal '/Users/cased/ruby', session.command
+
+        session.create
+
+        assert_equal '/Users/cased/ruby', session.original_command
+        assert_equal '/Users/[USERNAME]/ruby', session.command
+      ensure
+        Cased.config.guard_user_token = old_guard_user_token
+      end
+
       def test_state_requested
         old_guard_user_token = Cased.config.guard_user_token
         Cased.config.guard_user_token = 'user_1234'
