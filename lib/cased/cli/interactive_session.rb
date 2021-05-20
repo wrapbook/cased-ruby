@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'cased/cli/session'
+require 'tty/prompt'
 
 module Cased
   module CLI
@@ -27,6 +28,8 @@ module Cased
           command: command,
           metadata: metadata,
         )
+
+        @prompt = TTY::Prompt.new
       end
 
       def create
@@ -81,8 +84,11 @@ module Cased
       private
 
       def reason_prompt
-        print Cased::CLI::Log.string 'Please enter a reason for access: '
-        session.reason = STDIN.gets.chomp
+        reason = @prompt.multiline(Cased::CLI::Log.string('Please enter a reason for access:'), help: '(Press Ctrl+D or Ctrl+Z to submit)')
+        session.reason = reason.join("\n")
+      rescue TTY::Reader::InputInterrupt
+        Cased::CLI::Log.log 'Exiting and canceling request…'
+        exit 0
       end
 
       def wait_for_approval
