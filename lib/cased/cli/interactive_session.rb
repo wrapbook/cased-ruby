@@ -84,7 +84,7 @@ module Cased
       private
 
       def reason_prompt
-        reason = @prompt.multiline(Cased::CLI::Log.string('Please enter a reason for access:'))
+        reason = @prompt.multiline(Cased::CLI::Log.string('Please enter a reason for access:'), help: '(Press Ctrl+D or Ctrl+Z to submit)')
         session.reason = reason.join("\n")
       rescue TTY::Reader::InputInterrupt
         Cased::CLI::Log.log 'Exiting and canceling request…'
