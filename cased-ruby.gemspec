@@ -36,6 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'jwt', '~> 2'
   spec.add_dependency 'net-http-persistent', '~> 3.0'
   spec.add_dependency 'subprocess', '~> 1.5.0'
+  spec.add_dependency 'tty-prompt', '~> 0.23.0'
   spec.add_development_dependency 'bundler', '2.1.4'
   spec.add_development_dependency 'byebug', '11.0.1'
   spec.add_development_dependency 'minitest', '5.13.0'
