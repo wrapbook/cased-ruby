@@ -16,6 +16,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          gem install bundler
+          gem install bundler -v 2.2.27
           bundle install --local
       - run: bin/rubocop
