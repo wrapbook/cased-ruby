@@ -8,6 +8,7 @@ module Cased
       attr_reader :events
 
       def initialize
+        super
         @events = []
       end
 

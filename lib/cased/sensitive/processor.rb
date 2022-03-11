@@ -21,8 +21,7 @@ module Cased
         }
       end
 
-      attr_reader :audit_event
-      attr_reader :handlers
+      attr_reader :audit_event, :handlers
 
       def initialize(audit_event, handlers)
         @audit_event = audit_event.dup.freeze

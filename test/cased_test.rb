@@ -111,7 +111,7 @@ class CasedTest < Cased::Test
     test_publisher = Cased::Publishers::TestPublisher.new
     Cased.publishers = [test_publisher]
 
-    Cased.sensitive(:phone_number, /\d{3}\-\d{3}\-\d{4}/)
+    Cased.sensitive(:phone_number, /\d{3}-\d{3}-\d{4}/)
 
     travel_to(Time.utc(2020, 1, 1)) do
       Cased.publish(action: 'user.login', body: 'Hello 111-222-3333')
@@ -144,7 +144,7 @@ class CasedTest < Cased::Test
 
   def test_registering_sensitive_handler
     assert_difference 'Cased::Sensitive::Handler.handlers.length' do
-      Cased.sensitive(:username, /\@\w+/)
+      Cased.sensitive(:username, /@\w+/)
     end
   end
 

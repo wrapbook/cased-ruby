@@ -288,7 +288,7 @@ module Cased
       end
 
       def recordable?
-        STDOUT.isatty
+        $stdout.isatty
       end
 
       private

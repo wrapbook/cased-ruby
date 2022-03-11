@@ -20,7 +20,7 @@ require 'cased/cli'
 # Integrations
 begin
   require 'cased/integrations/sidekiq'
-rescue LoadError # rubocop:disable Lint/SuppressedException
+rescue LoadError
   # Sidekiq is not installed in host application
 end
 

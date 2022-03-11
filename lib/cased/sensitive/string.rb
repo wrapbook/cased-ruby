@@ -5,8 +5,7 @@ require 'cased/sensitive/range'
 module Cased
   module Sensitive
     class String < String
-      attr_reader :label
-      attr_reader :string
+      attr_reader :label, :string
 
       def initialize(string, label: nil)
         super(string)
