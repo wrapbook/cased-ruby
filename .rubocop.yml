@@ -6,7 +6,7 @@ AllCops:
     - "bin/{rails,rake,bundle}"
     - "node_modules/**/*"
     - "app/views/**/*"
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.7
 
 
 Style/Documentation:
