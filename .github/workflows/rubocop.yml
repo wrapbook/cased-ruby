@@ -12,10 +12,10 @@ jobs:
 
       - uses: actions/setup-ruby@v1
         with:
-          ruby-version: 2.6
+          ruby-version: 2.7
 
       - name: Install dependencies
         run: |
-          gem install bundler -v 2.2.27
+          gem install bundler -v 2.3.9
           bundle install --local
       - run: bin/rubocop
