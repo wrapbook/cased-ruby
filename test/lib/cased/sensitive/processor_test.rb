@@ -25,7 +25,7 @@ module Cased
       def test_processes_audit_event_with_global_handlers
         old_handlers = Cased::Sensitive::Handler.handlers
         Cased::Sensitive::Handler.handlers = []
-        Cased::Sensitive::Handler.register(:phone_number, /\d{3}\-\d{3}\-\d{4}/)
+        Cased::Sensitive::Handler.register(:phone_number, /\d{3}-\d{3}-\d{4}/)
         result = Cased::Sensitive::Processor.process(action: 'Hello 111-222-3333')
 
         expected_result = {
@@ -46,7 +46,7 @@ module Cased
       def test_processes_nested_audit_event_with_global_handlers
         old_handlers = Cased::Sensitive::Handler.handlers
         Cased::Sensitive::Handler.handlers = []
-        Cased::Sensitive::Handler.register(:phone_number, /\d{3}\-\d{3}\-\d{4}/)
+        Cased::Sensitive::Handler.register(:phone_number, /\d{3}-\d{3}-\d{4}/)
         result = Cased::Sensitive::Processor.process(
           action: 'Hello 111-222-3333',
           users: [
@@ -82,7 +82,7 @@ module Cased
       def test_mutates_audit_event_if_using_bang_method
         old_handlers = Cased::Sensitive::Handler.handlers
         Cased::Sensitive::Handler.handlers = []
-        Cased::Sensitive::Handler.register(:phone_number, /\d{3}\-\d{3}\-\d{4}/)
+        Cased::Sensitive::Handler.register(:phone_number, /\d{3}-\d{3}-\d{4}/)
         audit_event = {
           body: 'Hello 111-222-3333',
         }

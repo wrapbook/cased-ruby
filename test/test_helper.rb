@@ -22,15 +22,15 @@ module Cased
     end
 
     def suppress_output
-      original_stderr = STDERR.clone
-      original_stdout = STDOUT.clone
-      STDERR.reopen(File.new('/dev/null', 'w'))
-      STDOUT.reopen(File.new('/dev/null', 'w'))
+      original_stderr = $stderr.clone
+      original_stdout = $stdout.clone
+      $stderr.reopen(File.new('/dev/null', 'w'))
+      $stdout.reopen(File.new('/dev/null', 'w'))
 
       yield
     ensure
-      STDERR.reopen(original_stderr)
-      STDOUT.reopen(original_stdout)
+      $stderr.reopen(original_stderr)
+      $stdout.reopen(original_stdout)
     end
   end
 end

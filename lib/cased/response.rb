@@ -2,8 +2,7 @@
 
 module Cased
   class Response
-    attr_reader :body
-    attr_reader :exception
+    attr_reader :body, :exception
 
     def initialize(response: nil, exception: nil)
       @response = response

@@ -29,20 +29,10 @@ module Cased
         end
 
         # Required
-        attr_reader :header
-        attr_reader :version
-        attr_reader :width
-        attr_reader :height
-        attr_reader :stream
+        attr_reader :header, :version, :width, :height, :stream
 
         # Optional
-        attr_reader :timestamp
-        attr_reader :duration
-        attr_reader :idle_time_limit
-        attr_reader :command
-        attr_reader :title
-        attr_reader :env
-        attr_reader :theme
+        attr_reader :timestamp, :duration, :idle_time_limit, :command, :title, :env, :theme
 
         def initialize(header, stream)
           @header = header
