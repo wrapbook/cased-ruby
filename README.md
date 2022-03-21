@@ -766,6 +766,18 @@ Results in:
 }
 ```
 
+## Managing multiple dependency versions
+
+Github Actions is configured to test this gem against multiple versions of dependencies.
+
+This is managed by specifying a lockfile with the correct set of dependencies. To add a new set of dependencies, copy the existing file at `gemfile-locks/Gemfile.lock` and then update the dependency in that new lockfile with something like:
+
+```
+bundle lock --lockfile=gemfile-locks/Gemfile-activesupport-7.lock --update activesupport
+```
+
+The new lockfile can be added to the matrix at `.github/workflows/ruby.yml`.
+
 ## Contributing
 
 1. Fork it ( https://github.com/cased/cased-ruby/fork )
