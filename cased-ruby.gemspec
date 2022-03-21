@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'net-http-persistent', '~> 4.0.1'
   spec.add_dependency 'subprocess', '~> 1.5.5'
   spec.add_dependency 'tty-prompt', '~> 0.23.1'
-  spec.add_development_dependency 'bundler', '2.2.27'
+  spec.add_development_dependency 'bundler', '2.3.9'
   spec.add_development_dependency 'byebug', '~> 11.1.3'
   spec.add_development_dependency 'minitest', '~> 5.14.4'
   spec.add_development_dependency 'mocha', '~> 1.13.0'

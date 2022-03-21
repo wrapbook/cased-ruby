@@ -125,7 +125,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (= 2.2.27)
+  bundler (= 2.3.9)
   byebug (~> 11.1.3)
   cased-ruby!
   minitest (~> 5.14.4)
@@ -140,4 +140,4 @@ DEPENDENCIES
   yard (~> 0.9.26)
 
 BUNDLED WITH
-   2.2.27
+   2.3.9
