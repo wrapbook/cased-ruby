@@ -2,7 +2,6 @@
 
 require 'cased/http/error'
 require 'faraday'
-require 'faraday_middleware'
 
 module Cased
   module HTTP
