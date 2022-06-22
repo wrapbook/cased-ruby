@@ -172,7 +172,11 @@ module Cased
         builder.response :json
         builder.adapter :test do |stub|
           stub.get('/events') do |_env|
-            [200, {}, '{ "results": [true] }']
+            headers = {
+              'Content-Type' => 'application/json',
+            }
+
+            [200, headers, '{ "results": [true] }']
           end
         end
       end
@@ -186,7 +190,11 @@ module Cased
         builder.response :json
         builder.adapter :test do |stub|
           stub.get('/events') do |_env|
-            [200, {}, '{ "total_pages": 10 }']
+            headers = {
+              'Content-Type' => 'application/json',
+            }
+
+            [200, headers, '{ "total_pages": 10 }']
           end
         end
       end
@@ -200,7 +208,11 @@ module Cased
         builder.response :json
         builder.adapter :test do |stub|
           stub.get('/events') do |_env|
-            [200, {}, '{ "total_count": 100 }']
+            headers = {
+              'Content-Type' => 'application/json',
+            }
+
+            [200, headers, '{ "total_count": 100 }']
           end
         end
       end
