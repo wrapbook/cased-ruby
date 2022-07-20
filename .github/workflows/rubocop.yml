@@ -16,6 +16,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          gem install bundler -v 2.3.9
+          gem install bundler -v 2.3.16
           bundle install --local
       - run: bin/rubocop
