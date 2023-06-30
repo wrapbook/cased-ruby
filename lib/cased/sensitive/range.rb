@@ -20,7 +20,7 @@ module Cased
       # Public: The end offset of the sensitive value in the original value.
       attr_reader :end_offset
 
-      def initialize(label: nil, key:, begin_offset:, end_offset:, identifier: nil)
+      def initialize(key:, begin_offset:, end_offset:, identifier: nil, label: nil)
         raise ArgumentError, 'missing key' if key.nil?
         raise ArgumentError, 'missing begin_offset' if begin_offset.nil?
         raise ArgumentError, 'missing end_offset' if end_offset.nil?
