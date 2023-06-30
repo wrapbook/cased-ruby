@@ -33,7 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dotpath', '~> 0.1.0'
   spec.add_dependency 'faraday', '~> 2.0'
   spec.add_dependency 'json', '~> 2.5.1'
-  spec.add_dependency 'jwt', '~> 2.2.3'
+  spec.add_dependency 'jwt', '~> 2.7.1'
   spec.add_dependency 'net-http-persistent', '~> 4.0.1'
   spec.add_dependency 'subprocess', '~> 1.5.5'
   spec.add_dependency 'tty-prompt', '~> 0.23.1'
