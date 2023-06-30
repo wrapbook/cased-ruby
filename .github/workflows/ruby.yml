@@ -16,11 +16,6 @@ jobs:
         lockfile:
           - "Gemfile.lock"
           - "Gemfile-activesupport-7.lock"
-        exclude:
-          - ruby: "2.5"
-            lockfile: "Gemfile-activesupport-7.lock"
-          - ruby: "2.6"
-            lockfile: "Gemfile-activesupport-7.lock"
 
     name: Ruby ${{ matrix.ruby }} Gem lockfile ${{ matrix.lockfile }} test
     steps:
