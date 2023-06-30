@@ -16,6 +16,6 @@ jobs:
           bundler-cache: false
 
       - name: Install dependencies
-        run: bundle install --local
+        run: bundle install
 
       - run: bin/rubocop
