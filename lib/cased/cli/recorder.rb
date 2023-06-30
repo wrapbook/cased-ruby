@@ -8,12 +8,7 @@ module Cased
       KEY = 'CASED_CLI_RECORDING'
       TRUE = '1'
 
-      attr_reader :command
-      attr_reader :events
-      attr_reader :started_at
-      attr_reader :width
-      attr_reader :height
-      attr_reader :options
+      attr_reader :command, :events, :started_at, :width, :height, :options
       attr_accessor :writer
 
       # @return [Boolean] if CLI session is being recorded.
@@ -46,7 +41,7 @@ module Cased
         writer.time do
           Subprocess.check_call(command, options) do |t|
             t.communicate do |stdout, _stderr|
-              STDOUT.write(stdout)
+              $stdout.write(stdout)
 
               writer << stdout.gsub("\n", "\r\n")
             end

@@ -5,8 +5,7 @@ require 'pathname'
 module Cased
   module CLI
     class Authentication
-      attr_reader :directory
-      attr_reader :credentials_path
+      attr_reader :directory, :credentials_path
       attr_writer :token
 
       def initialize(token: nil)

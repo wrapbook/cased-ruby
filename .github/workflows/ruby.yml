@@ -13,13 +13,25 @@ jobs:
           - "3.0"
           - "3.1"
           - "3.2"
-    name: Ruby ${{ matrix.ruby }} test
+        lockfile:
+          - "Gemfile.lock"
+          - "Gemfile-activesupport-7.lock"
+        exclude:
+          - ruby: "2.5"
+            lockfile: "Gemfile-activesupport-7.lock"
+          - ruby: "2.6"
+            lockfile: "Gemfile-activesupport-7.lock"
+
+    name: Ruby ${{ matrix.ruby }} Gem lockfile ${{ matrix.lockfile }} test
     steps:
       - uses: actions/checkout@v2
 
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+
+      - name: Override Gemfile.lock to test multiple gem dependencies
+        run: cp -f gemfile-locks/${{ matrix.lockfile }} Gemfile.lock
 
       - name: Install dependencies
         run: |

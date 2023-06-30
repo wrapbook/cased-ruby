@@ -6,8 +6,7 @@ require 'json'
 module Cased
   module HTTP
     class Error < Cased::Error
-      attr_reader :code
-      attr_reader :json
+      attr_reader :code, :json
 
       def initialize(json = {}, code = nil)
         @json = json

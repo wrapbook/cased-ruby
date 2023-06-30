@@ -9,12 +9,8 @@ module Cased
       class Writer
         VERSION = 2
 
-        attr_accessor :width
-        attr_accessor :height
-        attr_reader :command
-        attr_reader :stream
-        attr_reader :started_at
-        attr_reader :finished_at
+        attr_accessor :width, :height
+        attr_reader :command, :stream, :started_at, :finished_at
 
         def initialize(command: [], width: 80, height: 24)
           @command = command

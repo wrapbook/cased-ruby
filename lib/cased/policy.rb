@@ -4,8 +4,7 @@ require 'cased/query'
 
 module Cased
   class Policy
-    attr_reader :api_key
-    attr_reader :client
+    attr_reader :api_key, :client
 
     def initialize(api_key:)
       @api_key = api_key
