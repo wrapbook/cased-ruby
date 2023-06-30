@@ -13,9 +13,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1
+          bundler: default
+          bundler-cache: true
 
-      - name: Install dependencies
-        run: |
-          gem install bundler -v 2.4.15
-          bundle install --local
       - run: bin/rubocop
