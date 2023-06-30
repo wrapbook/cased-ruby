@@ -15,4 +15,7 @@ jobs:
           ruby-version: 3.1
           bundler-cache: false
 
+      - name: Install dependencies
+        run: bundle install
+
       - run: bin/rubocop
