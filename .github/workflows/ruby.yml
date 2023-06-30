@@ -23,7 +23,7 @@ jobs:
           bundler-cache: false
 
       - name: Install dependencies
-        run: bundle install
+        run: bundle install --local
 
       - name: Run Tests
         run: |
